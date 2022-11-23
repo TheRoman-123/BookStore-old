@@ -45,7 +45,9 @@ public class Customer {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     @ToString.Exclude
-    private List<Cart> carts;
+    private List<Sale> sales;
+
+
 
     @Override
     public boolean equals(Object o) {

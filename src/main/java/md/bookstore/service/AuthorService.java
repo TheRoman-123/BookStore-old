@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import md.bookstore.dao.AuthorDAO;
 import md.bookstore.dto.AuthorDTO;
 import md.bookstore.entity.Author;
-import md.bookstore.exception.MyException;
-import org.springframework.http.HttpStatus;
+import md.bookstore.exception.OffsetOrLimitException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -18,13 +17,10 @@ public class AuthorService {
 
     private AuthorDAO authorDAO;
 
+    // Later implement Pageable!
     public List<AuthorDTO> getAllUntilLimit(Integer offset, Integer limit) {
         if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-//            throw new MyException();
-            throw new IllegalArgumentException(
-                    "Offset or limit are invalid: offset = " + offset +
-                    ", limit = " + limit
-            );
+            throw new OffsetOrLimitException(offset, limit);
         }
         return authorDAO.findAuthorEntityWithOffsetAndLimit(offset, limit)
                 .parallelStream()
@@ -39,9 +35,13 @@ public class AuthorService {
                 .collect(Collectors.toList());
     }
 
+    public AuthorDTO get(Long id) {
+        return new AuthorDTO(authorDAO.findById(id).orElseThrow());
+    }
+
     public void createAuthor(AuthorDTO authorDTO) {
         if (authorDTO == null) {
-            throw new NullPointerException("AuthorDTO is null. Entity not created.");
+            throw new NullPointerException("Author.ts is null. Author.ts not created.");
         }
         Author author = new Author();
         author.setFirstName(authorDTO.getFirstName());

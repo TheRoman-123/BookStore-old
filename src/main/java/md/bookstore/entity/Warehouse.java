@@ -4,8 +4,10 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -24,6 +26,10 @@ public class Warehouse {
     @Column(nullable = false)
     private Integer amount;
 
+    @Size(max = 100)
+    @Column(name = "image_path", nullable = false, length = 100)
+    private String imagePath;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")
     @ToString.Exclude
@@ -36,7 +42,7 @@ public class Warehouse {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "warehouse")
     @ToString.Exclude
-    private List<Cart> carts;
+    private Set<Cart> carts;
 
     @Override
     public boolean equals(Object o) {

@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -25,9 +26,14 @@ public class Sale {
     @Column(precision = 7, scale = 2, nullable = false)
     private Double cost;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "sale")
+    @OneToMany(mappedBy = "sale")
     @ToString.Exclude
-    private List<Cart> carts;
+    private Set<Cart> carts;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    @ToString.Exclude
+    private Customer customer;
 
     @Override
     public boolean equals(Object o) {
