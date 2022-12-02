@@ -31,3 +31,50 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Angular ###
+# Compiled output
+book_store_front/dist
+book_store_front/tmp
+book_store_front/out-tsc
+book_store_front/bazel-out
+
+# Node
+book_store_front/node_modules
+book_store_front/npm-debug.log
+book_store_front/yarn-error.log
+
+# IDEs and editors
+book_store_front/.idea/
+book_store_front/.project
+book_store_front/.classpath
+book_store_front/.c9/
+book_store_front*/.launch
+book_store_front/.settings/
+book_store_front*/.sublime-workspace
+
+# Visual Studio Code
+book_store_front.vscode/*
+!book_store_front/.vscode/settings.json
+!book_store_front/.vscode/tasks.json
+!book_store_front/.vscode/launch.json
+!book_store_front/.vscode/extensions.json
+book_store_front/.history/*
+
+# Miscellaneous
+book_store_front/.angular/cache
+book_store_front/.sass-cache/
+book_store_front/connect.lock
+book_store_front/coverage
+book_store_front/libpeerconnection.log
+book_store_front/testem.log
+book_store_front/typings
+book_store_front/package-lock.json
+
+# System files
+book_store_front/.DS_Store
+book_store_front/Thumbs.db
+
+
+### Others ###
+*.log

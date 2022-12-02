@@ -12,7 +12,6 @@ import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.class.getName());
 
     @ExceptionHandler(OffsetOrLimitException.class)
@@ -38,7 +37,7 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleException(IllegalArgumentException exception) {
         LOGGER.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-//        Может, потом найдёшь более подходящий код
+//        Может, потом найдёшь более подходящий статус
     }
 
     @ExceptionHandler(Exception.class)

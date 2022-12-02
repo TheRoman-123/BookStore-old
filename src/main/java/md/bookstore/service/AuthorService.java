@@ -7,6 +7,7 @@ import md.bookstore.entity.Author;
 import md.bookstore.exception.OffsetOrLimitException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -29,6 +30,15 @@ public class AuthorService {
     }
 
     public List<AuthorDTO> getAll() {
+        /*
+        List<Author> authorList = authorDAO.findAll();
+        List<AuthorDTO> authorDTOList = new ArrayList<>();
+        for (Author author : authorList) {
+            authorDTOList.add(new AuthorDTO(author));
+        }
+        return authorDTOList;
+        */
+
         return authorDAO.findAll()
                 .parallelStream()
                 .map(AuthorDTO::new)
