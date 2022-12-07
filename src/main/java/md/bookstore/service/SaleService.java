@@ -40,6 +40,7 @@ public class SaleService {
         sale.setCustomer(customerDAO.getReferenceById(customer_id));
         sale.setDateTime(LocalDateTime.now());
         saleDAO.saveAndFlush(sale);
+
         cartService.saveCarts(cartToSaveDTOSet, sale);
 
         return sale.getId();

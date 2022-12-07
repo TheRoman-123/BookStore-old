@@ -7,8 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -23,7 +21,7 @@ public class SaleController {
 //    }
 
     @PostMapping("")
-    public ResponseEntity<Object> createSale(
+    public ResponseEntity<Object> createSale (
             @RequestParam("cost") Double cost,
             @RequestParam("user_id") Long customer_id,
             @RequestBody Set<CartToSaveDTO> books

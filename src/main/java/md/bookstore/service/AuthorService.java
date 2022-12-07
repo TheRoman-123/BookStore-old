@@ -49,14 +49,16 @@ public class AuthorService {
         return new AuthorDTO(authorDAO.findById(id).orElseThrow());
     }
 
-    public void createAuthor(AuthorDTO authorDTO) {
+    public Long createAuthor(AuthorDTO authorDTO) {
         if (authorDTO == null) {
-            throw new NullPointerException("Author.ts is null. Author.ts not created.");
+            throw new NullPointerException("Author is null. Author not created.");
         }
         Author author = new Author();
         author.setFirstName(authorDTO.getFirstName());
         author.setLastName(authorDTO.getLastName());
-        authorDAO.save(author);
+        authorDAO.saveAndFlush(author);
+
+        return author.getId();
     }
 
     public void updateAuthor(Long id, AuthorDTO authorDTO) {

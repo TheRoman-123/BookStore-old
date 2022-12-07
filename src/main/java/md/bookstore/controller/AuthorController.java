@@ -31,8 +31,11 @@ public class AuthorController {
 
     @PostMapping("/")
     public ResponseEntity<Object> createAuthor(@RequestBody AuthorDTO authorDTO) {
-        authorService.createAuthor(authorDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+
+        return new ResponseEntity<>(
+                authorService.createAuthor(authorDTO),
+                HttpStatus.CREATED
+        );
         // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
     }
 
