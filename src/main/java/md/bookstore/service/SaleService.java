@@ -1,8 +1,8 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.CustomerDAO;
-import md.bookstore.dao.SaleDAO;
+import md.bookstore.repository.CustomerRepository;
+import md.bookstore.repository.SaleRepository;
 import md.bookstore.dto.CartToSaveDTO;
 import md.bookstore.dto.SaleDTO;
 import md.bookstore.entity.Cart;
@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class SaleService {
-    private SaleDAO saleDAO;
-    private CustomerDAO customerDAO;
+    private SaleRepository saleRepository;
+    private CustomerRepository customerRepository;
 
     private CartService cartService;
 
@@ -37,9 +37,9 @@ public class SaleService {
         }
         Sale sale = new Sale();
         sale.setCost(cost);
-        sale.setCustomer(customerDAO.getReferenceById(customer_id));
+        sale.setCustomer(customerRepository.getReferenceById(customer_id));
         sale.setDateTime(LocalDateTime.now());
-        saleDAO.saveAndFlush(sale);
+        saleRepository.saveAndFlush(sale);
 
         cartService.saveCarts(cartToSaveDTOSet, sale);
 

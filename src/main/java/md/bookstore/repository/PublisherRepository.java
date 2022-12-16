@@ -1,4 +1,4 @@
-package md.bookstore.dao;
+package md.bookstore.repository;
 
 import md.bookstore.entity.Publisher;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Repository
-public interface PublisherDAO extends JpaRepository<Publisher, Long> {
+public interface PublisherRepository extends JpaRepository<Publisher, Long> {
     @Query(value = "SELECT * FROM publisher OFFSET :offset LIMIT :limit", nativeQuery = true)
     List<Publisher> findPublisherEntityWithOffsetAndLimit (
             @Param("offset") Integer offset,

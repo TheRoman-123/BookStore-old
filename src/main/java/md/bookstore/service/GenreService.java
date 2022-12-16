@@ -1,7 +1,7 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.GenreDAO;
+import md.bookstore.repository.GenreRepository;
 import md.bookstore.dto.GenreDTO;
 import md.bookstore.dto.GenreDTO;
 import md.bookstore.entity.Genre;
@@ -14,27 +14,27 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class GenreService {
-    private GenreDAO genreDAO;
+    private GenreRepository genreRepository;
 
     public List<GenreDTO> getAllUntilLimit(Integer offset, Integer limit) {
         if (offset == null || limit == null || limit <= 0 || offset <= 0) {
             throw new OffsetOrLimitException(offset, limit);
         }
-        return genreDAO.findGenreEntityWithOffsetAndLimit(offset, limit)
+        return genreRepository.findGenreEntityWithOffsetAndLimit(offset, limit)
                 .parallelStream()
                 .map(GenreDTO::new)
                 .collect(Collectors.toList());
     }
 
     public List<GenreDTO> getAll() {
-        return genreDAO.findAll()
+        return genreRepository.findAll()
                 .parallelStream()
                 .map(GenreDTO::new)
                 .collect(Collectors.toList());
     }
 
     public GenreDTO get(Long id) {
-        return new GenreDTO(genreDAO.findById(id).orElseThrow());
+        return new GenreDTO(genreRepository.findById(id).orElseThrow());
     }
 
     public void createGenre(GenreDTO genreDTO) {
@@ -43,17 +43,17 @@ public class GenreService {
         }
         Genre genre = new Genre();
         genre.setGenreName(genreDTO.getGenreName());
-        genreDAO.save(genre);
+        genreRepository.save(genre);
     }
 
     public void updateGenre(Long id, GenreDTO genreDTO) {
-        Genre genre = genreDAO.getReferenceById(id);
+        Genre genre = genreRepository.getReferenceById(id);
         genre.setGenreName(genreDTO.getGenreName());
-        genreDAO.save(genre);
+        genreRepository.save(genre);
     }
 
     public void deleteGenre(Long id) {
-        genreDAO.deleteById(id);
+        genreRepository.deleteById(id);
     }
     
 }

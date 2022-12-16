@@ -1,4 +1,4 @@
-package md.bookstore.dao;
+package md.bookstore.repository;
 
 import md.bookstore.entity.Warehouse;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Repository
-public interface WarehouseDAO extends JpaRepository<Warehouse, Long> {
+public interface WarehouseRepository extends JpaRepository<Warehouse, Long> {
     @Query(value = "SELECT * FROM warehouse OFFSET :offset LIMIT :limit", nativeQuery = true)
     List<Warehouse> findAllWithOffsetAndLimit(
             @Param("offset") Integer offset,

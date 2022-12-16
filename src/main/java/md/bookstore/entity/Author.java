@@ -5,8 +5,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import jakarta.persistence.*;
-import javax.validation.constraints.Size;
-import java.util.List;
+import jakarta.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 

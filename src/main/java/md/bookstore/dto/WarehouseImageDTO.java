@@ -3,7 +3,7 @@ package md.bookstore.dto;
 import lombok.Data;
 import md.bookstore.entity.Warehouse;
 
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Size;
 
 /**
  * A DTO for the {@link md.bookstore.entity.Warehouse} entity
