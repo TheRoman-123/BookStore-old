@@ -1,7 +1,7 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.CartDAO;
+import md.bookstore.dao.CartRepository;
 import md.bookstore.dto.CartToSaveDTO;
 import md.bookstore.entity.Cart;
 import md.bookstore.entity.Sale;
@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class CartService {
-    private CartDAO cartDAO;
+    private CartRepository cartRepository;
 
     public Long saveCart(CartToSaveDTO cartToSaveDTO, Sale sale) {
         Cart cart = new Cart(cartToSaveDTO);
         cart.setSale(sale);
-        cartDAO.saveAndFlush(cart);
+        cartRepository.saveAndFlush(cart);
         return cart.getId();
     }
 
@@ -27,6 +27,6 @@ public class CartService {
                 .map(Cart::new)
                 .collect(Collectors.toSet());
         carts.forEach(a -> a.setSale(sale));
-        cartDAO.saveAll(carts);
+        cartRepository.saveAll(carts);
     }
 }

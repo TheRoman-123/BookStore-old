@@ -1,7 +1,7 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.AuthorDAO;
+import md.bookstore.dao.AuthorRepository;
 import md.bookstore.dto.AuthorDTO;
 import md.bookstore.entity.Author;
 import md.bookstore.exception.OffsetOrLimitException;
@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AuthorService {
 
-    private AuthorDAO authorDAO;
+    private AuthorRepository authorRepository;
 
     // Later implement Pageable!
     public List<AuthorDTO> getAllUntilLimit(Integer offset, Integer limit) {
         if (offset == null || limit == null || limit <= 0 || offset <= 0) {
             throw new OffsetOrLimitException(offset, limit);
         }
-        return authorDAO.findAuthorEntityWithOffsetAndLimit(offset, limit)
+        return authorRepository.findAuthorEntityWithOffsetAndLimit(offset, limit)
                 .parallelStream()
                 .map(AuthorDTO::new)
                 .collect(Collectors.toList());
@@ -31,7 +31,7 @@ public class AuthorService {
 
     public List<AuthorDTO> getAll() {
         /*
-        List<Author> authorList = authorDAO.findAll();
+        List<Author> authorList = authorRepository.findAll();
         List<AuthorDTO> authorDTOList = new ArrayList<>();
         for (Author author : authorList) {
             authorDTOList.add(new AuthorDTO(author));
@@ -39,14 +39,14 @@ public class AuthorService {
         return authorDTOList;
         */
 
-        return authorDAO.findAll()
+        return authorRepository.findAll()
                 .parallelStream()
                 .map(AuthorDTO::new)
                 .collect(Collectors.toList());
     }
 
     public AuthorDTO get(Long id) {
-        return new AuthorDTO(authorDAO.findById(id).orElseThrow());
+        return new AuthorDTO(authorRepository.findById(id).orElseThrow());
     }
 
     public void createAuthor(AuthorDTO authorDTO) {
@@ -56,17 +56,17 @@ public class AuthorService {
         Author author = new Author();
         author.setFirstName(authorDTO.getFirstName());
         author.setLastName(authorDTO.getLastName());
-        authorDAO.save(author);
+        authorRepository.save(author);
     }
 
     public void updateAuthor(Long id, AuthorDTO authorDTO) {
-        Author author = authorDAO.getReferenceById(id);
+        Author author = authorRepository.getReferenceById(id);
         author.setFirstName(authorDTO.getFirstName());
         author.setLastName(authorDTO.getLastName());
-        authorDAO.save(author);
+        authorRepository.save(author);
     }
 
     public void deleteAuthor(Long id) {
-        authorDAO.deleteById(id);
+        authorRepository.deleteById(id);
     }
 }

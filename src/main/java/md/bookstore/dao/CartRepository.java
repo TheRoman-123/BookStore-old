@@ -1,10 +1,9 @@
 package md.bookstore.dao;
 
-import md.bookstore.entity.Customer;
+import md.bookstore.entity.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CustomerDAO extends JpaRepository<Customer, Long> {
-
+public interface CartRepository extends JpaRepository<Cart, Long> {
 }

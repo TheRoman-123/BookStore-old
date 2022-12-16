@@ -17,8 +17,6 @@ public class SaleDTO {
     private LocalDateTime dateTime;
     private Double cost;
 
-
-
     private SaleDTO(Sale sale) {
         id = sale.getId();
         dateTime = sale.getDateTime();

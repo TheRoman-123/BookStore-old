@@ -5,7 +5,6 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -20,29 +19,31 @@ public class Book {
     @Column(name = "book_id", nullable = false)
     private Long id;
 
-    @Size(max = 40)
     @Column(length = 40, nullable = false)
     private String title;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "book_author",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id")
-    )
-    @ToString.Exclude
-    private Set<Author> authors;
+    @Column(precision = 6, scale = 2, nullable = false)
+    private Double price;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "book_genre",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id")
-    )
+    @Column(nullable = false)
+    private Integer amount;
+
+    @Size(max = 100)
+    @Column(name = "image_path", nullable = false, length = 100)
+    private String imagePath;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "books")
     @ToString.Exclude
-    private Set<Genre> genres;
+    private Set<LiteraryWork> literaryWorks;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    @ToString.Exclude
+    private Publisher publisher;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     @ToString.Exclude
-    private List<Warehouse> warehouses;
+    private Set<Cart> carts;
 
     @Override
     public boolean equals(Object o) {

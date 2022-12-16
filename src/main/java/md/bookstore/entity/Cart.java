@@ -29,13 +29,13 @@ public class Cart {
     private Sale sale;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "warehouse_id", nullable = false)
+    @JoinColumn(name = "book_id", nullable = false)
     @ToString.Exclude
-    private Warehouse warehouse;
+    private Book book;
 
     public Cart(CartToSaveDTO cartToSaveDTO) {
         this.amount = cartToSaveDTO.getAmount();
-        this.warehouse = cartToSaveDTO.getBook();
+        this.book = cartToSaveDTO.getBook();
     }
 
     @Override

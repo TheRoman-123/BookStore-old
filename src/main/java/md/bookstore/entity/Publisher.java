@@ -25,7 +25,7 @@ public class Publisher {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "publisher")
     @ToString.Exclude
-    private List<Warehouse> warehouses;
+    private List<Book> books;
 
     @Override
     public boolean equals(Object o) {

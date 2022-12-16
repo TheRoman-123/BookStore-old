@@ -29,9 +29,9 @@ public class Author {
     @Column(name = "last_name", length = 20, nullable = false)
     private String lastName;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "authors")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     @ToString.Exclude
-    private Set<Book> books;
+    private Set<LiteraryWork> literaryWorks;
 
     @Override
     public boolean equals(Object o) {

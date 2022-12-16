@@ -25,7 +25,7 @@ public class Genre {
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "genres")
     @ToString.Exclude
-    private List<Book> books;
+    private List<LiteraryWork> literaryWorks;
 
     @Override
     public boolean equals(Object o) {
