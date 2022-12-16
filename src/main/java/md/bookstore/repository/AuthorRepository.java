@@ -1,4 +1,4 @@
-package md.bookstore.dao;
+package md.bookstore.repository;
 
 import md.bookstore.entity.Author;
 import org.springframework.data.jpa.repository.JpaRepository;

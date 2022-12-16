@@ -15,11 +15,11 @@ import md.bookstore.entity.Cart;
 @NoArgsConstructor
 @Builder
 public class CartToSaveDTO {
-    private Book book;
+    private Long bookId;
     private Integer amount;
 
     public CartToSaveDTO(Cart cart) {
         amount = cart.getAmount();
-        book = cart.getBook();
+        bookId = cart.getBook().getId();
     }
 }

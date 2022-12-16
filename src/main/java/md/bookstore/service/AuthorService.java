@@ -1,15 +1,13 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.AuthorRepository;
+import md.bookstore.repository.AuthorRepository;
 import md.bookstore.dto.AuthorDTO;
 import md.bookstore.entity.Author;
 import md.bookstore.exception.OffsetOrLimitException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service

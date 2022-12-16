@@ -1,12 +1,14 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.BookRepository;
+import md.bookstore.repository.BookRepository;
 import md.bookstore.dto.BookToPrintDTO;
+import md.bookstore.dto.CartToSaveDTO;
 import md.bookstore.exception.OffsetOrLimitException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +36,14 @@ public class BookService {
                 .stream()
                 .map(BookToPrintDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    public boolean hasWarehouseEnoughBooks(Set<CartToSaveDTO> carts) {
+//        Set<Book> books = bookRepository.find
+//        for (CartToSaveDTO cart : carts) {
+//            currentBook = bookRepository.getBookByTitle(cart.getBook())
+//        }
+        return true;
     }
 
 //    public List<>

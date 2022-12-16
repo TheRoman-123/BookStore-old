@@ -1,4 +1,4 @@
-package md.bookstore.dao;
+package md.bookstore.repository;
 
 import md.bookstore.entity.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +15,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
             @Param("offset") Integer offset,
             @Param("limit") Integer bookLimit
     );
+
+    Book getBookByTitle(String title);
 
     /*String query = "SELECT w.book_id, w.price, b.title, " +
             "a.first_name || ' ' || a.last_name AS authors" +

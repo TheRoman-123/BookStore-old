@@ -27,7 +27,7 @@ public class Customer {
     private String firstName;
 
     @Size(max = 20)
-    @Column(name = "last_name", length = 20, nullable = false)
+    @Column(name = "last_name", length = 20)
     private String lastName;
 
     @Column(name = "birth_date", columnDefinition = "DATE")
@@ -35,7 +35,7 @@ public class Customer {
 
     @Email
     @Size(max = 50)
-    @Column(length = 50, unique = true, nullable = false)
+    @Column(length = 50, unique = true)
     private String email;
 
     @Pattern(regexp = "0[67]\\d{7}", message = "Enter valid phone number!")
@@ -43,11 +43,14 @@ public class Customer {
     @Column(name = "phone_number", length = 9, unique = true, nullable = false)
     private String phoneNumber;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @ToString.Exclude
+    private User user;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "customer")
     @ToString.Exclude
     private List<Sale> sales;
-
-
 
     @Override
     public boolean equals(Object o) {

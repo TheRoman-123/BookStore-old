@@ -33,9 +33,10 @@ public class Cart {
     @ToString.Exclude
     private Book book;
 
-    public Cart(CartToSaveDTO cartToSaveDTO) {
-        this.amount = cartToSaveDTO.getAmount();
-        this.book = cartToSaveDTO.getBook();
+    public Cart(Integer amount, Sale sale, Book book) {
+        this.amount = amount;
+        this.sale = sale;
+        this.book = book;
     }
 
     @Override

@@ -19,8 +19,8 @@ public class Genre {
     @Column(name = "genre_id", nullable = false)
     private Long id;
 
-    @Size(max = 20)
-    @Column(name = "genre_name", length = 20, unique = true, nullable = false)
+    @Size(max = 50)
+    @Column(name = "genre_name", length = 50, unique = true, nullable = false)
     private String genreName;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "genres")

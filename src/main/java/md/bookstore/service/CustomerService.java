@@ -1,7 +1,7 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.CustomerRepository;
+import md.bookstore.repository.CustomerRepository;
 import md.bookstore.dto.CustomerDTO;
 import org.springframework.stereotype.Service;
 

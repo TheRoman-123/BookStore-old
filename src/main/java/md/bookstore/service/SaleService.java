@@ -1,8 +1,8 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.CustomerRepository;
-import md.bookstore.dao.SaleRepository;
+import md.bookstore.repository.CustomerRepository;
+import md.bookstore.repository.SaleRepository;
 import md.bookstore.dto.CartToSaveDTO;
 import md.bookstore.entity.Sale;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,7 @@ import java.util.Set;
 public class SaleService {
     private SaleRepository saleRepository;
     private CustomerRepository customerRepository;
+    private BookService bookService;
 
     private CartService cartService;
 
@@ -35,7 +36,8 @@ public class SaleService {
         sale.setCost(cost);
         sale.setCustomer(customerRepository.getReferenceById(customer_id));
         sale.setDateTime(LocalDateTime.now());
-        saleRepository.saveAndFlush(sale);
+        saleRepository.save(sale);
+
         cartService.saveCarts(cartToSaveDTOSet, sale);
 
         return sale.getId();

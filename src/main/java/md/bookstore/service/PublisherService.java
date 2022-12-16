@@ -1,7 +1,7 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dao.PublisherRepository;
+import md.bookstore.repository.PublisherRepository;
 import md.bookstore.dto.PublisherDTO;
 import md.bookstore.entity.Publisher;
 import md.bookstore.exception.OffsetOrLimitException;
