@@ -8,8 +8,10 @@ import md.bookstore.entity.Book;
 import md.bookstore.entity.Cart;
 import md.bookstore.entity.Sale;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -25,6 +27,8 @@ public class CartService {
         return cart.getId();
     }
 
+//    @Transactional
+//    TODO: Переделаешь так, чтобы список книг загружался одним запросом к базе
     public void saveCarts(Set<CartToSaveDTO> cartToSaveDTOSet, Sale sale) {
         Set<Cart> carts = new HashSet<>();
         for (CartToSaveDTO cartToSaveDTO : cartToSaveDTOSet) {
@@ -32,5 +36,13 @@ public class CartService {
             carts.add(new Cart(cartToSaveDTO.getAmount(), sale, book));
         }
         cartRepository.saveAll(carts);
+    }
+
+    public void saveCarts(Set<Cart> carts) {
+        cartRepository.saveAll(carts);
+    }
+
+    public void deleteById(List<Long> cartIds) {
+        cartRepository.deleteAllById(cartIds);
     }
 }

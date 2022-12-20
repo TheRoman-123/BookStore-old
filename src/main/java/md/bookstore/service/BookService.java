@@ -1,6 +1,8 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
+import md.bookstore.entity.Book;
+import md.bookstore.exception.NotEnoughBooksException;
 import md.bookstore.repository.BookRepository;
 import md.bookstore.dto.BookToPrintDTO;
 import md.bookstore.dto.CartToSaveDTO;
@@ -38,12 +40,16 @@ public class BookService {
                 .collect(Collectors.toList());
     }
 
-    public boolean hasWarehouseEnoughBooks(Set<CartToSaveDTO> carts) {
-//        Set<Book> books = bookRepository.find
-//        for (CartToSaveDTO cart : carts) {
-//            currentBook = bookRepository.getBookByTitle(cart.getBook())
-//        }
-        return true;
+    public boolean hasWarehouseEnoughBooks(Long id, Integer amount) {
+        Book book = bookRepository.getReferenceById(id);
+        return book.getAmount() >= amount;
+    }
+
+    public void takeFromWarehouse(Book book, Integer amount) {
+        if (!hasWarehouseEnoughBooks(book.getId(), amount)) {
+            throw new NotEnoughBooksException("Not enough " + book.getTitle());
+        }
+        book.setAmount(book.getAmount() - amount);
     }
 
 //    public List<>

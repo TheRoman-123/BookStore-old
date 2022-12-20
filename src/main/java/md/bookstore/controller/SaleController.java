@@ -33,4 +33,16 @@ public class SaleController {
                 HttpStatus.CREATED
         );
     }
+
+    @PostMapping("/{id}/confirm")
+    public ResponseEntity<Object> confirmSale (@PathVariable("id") Long id) {
+        saleService.confirmSale(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/decline")
+    public ResponseEntity<Object> declineSale (@PathVariable("id") Long id) {
+        saleService.declineSale(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -26,6 +26,9 @@ public class Sale {
     @Column(precision = 7, scale = 2, nullable = false)
     private Double cost;
 
+    @Column(name = "confirmed", nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean confirmed;
+
     @OneToMany(mappedBy = "sale")
     @ToString.Exclude
     private Set<Cart> carts;

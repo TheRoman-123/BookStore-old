@@ -18,11 +18,7 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     Book getBookByTitle(String title);
 
-    /*String query = "SELECT w.book_id, w.price, b.title, " +
-            "a.first_name || ' ' || a.last_name AS authors" +
-            "FROM book w JOIN book b ON w.book_id = b.book_id" +
-            "JOIN book_author ba ON b.book_id = ba.book_id" +
-            "JOIN author a ON ba.author_id = a.author_id";
-    @Query(value = query, nativeQuery = true)
-    List<Book> getPrintableBooks();*/
+//    @Query(value = "SELECT count(b) FROM Book b WHERE b.id IN :ids GROUP BY count(b)")
+//    Long countAllById(Iterable<? extends Number> ids);
+
 }

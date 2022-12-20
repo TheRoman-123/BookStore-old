@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
@@ -27,10 +28,16 @@ public class RestExceptionHandler {
         return new ResponseEntity<>("Check your offset and limit!", HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Object> handleException(NoSuchElementException exception) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleException(EntityNotFoundException exception) {
         LOGGER.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotEnoughBooksException.class)
+    public ResponseEntity<Object> handleException(NotEnoughBooksException exception) {
+        LOGGER.warn(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
