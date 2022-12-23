@@ -47,7 +47,7 @@ public class AuthorService {
         return new AuthorDTO(authorRepository.findById(id).orElseThrow());
     }
 
-    public void createAuthor(AuthorDTO authorDTO) {
+    public Long createAuthor(AuthorDTO authorDTO) {
         if (authorDTO == null) {
             throw new NullPointerException("Author.ts is null. Author.ts not created.");
         }
@@ -55,6 +55,7 @@ public class AuthorService {
         author.setFirstName(authorDTO.getFirstName());
         author.setLastName(authorDTO.getLastName());
         authorRepository.save(author);
+        return author.getId();
     }
 
     public void updateAuthor(Long id, AuthorDTO authorDTO) {

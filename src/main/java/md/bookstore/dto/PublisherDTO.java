@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import md.bookstore.entity.Publisher;
 
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**

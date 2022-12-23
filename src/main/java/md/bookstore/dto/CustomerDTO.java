@@ -6,9 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import md.bookstore.entity.Customer;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 /**
@@ -19,13 +19,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class CustomerDTO {
-    private Long id;
     @Size(max = 20)
     private String firstName;
     @Size(max = 20)
     private String lastName;
     private LocalDate birthDate;
-    @Email
+    @Email(message = "Please provide valid email")
     @Size(max = 50)
     private String email;
     @Pattern(regexp = "0[67]\\d{7}", message = "Enter valid phone number!")
@@ -33,7 +32,6 @@ public class CustomerDTO {
     private String phoneNumber;
 
     public CustomerDTO(Customer customer) {
-        id = customer.getId();
         firstName = customer.getFirstName();
         lastName = customer.getLastName();
         birthDate = customer.getBirthDate();

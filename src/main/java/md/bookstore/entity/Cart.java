@@ -4,7 +4,7 @@ import lombok.*;
 import md.bookstore.dto.CartToSaveDTO;
 import org.hibernate.Hibernate;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;

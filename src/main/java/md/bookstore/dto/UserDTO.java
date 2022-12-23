@@ -1,23 +1,30 @@
 package md.bookstore.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import md.bookstore.entity.Authority;
+import lombok.*;
 
-import java.util.Set;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@RequiredArgsConstructor
 public class UserDTO {
-    private Long id;
+    @Null
+    private final Long id;
 
-    private String username;
+    @NotBlank(message = "Please provide a username")
+    @Size(min = 4, max = 50, message = "Username is too long")
+    @Pattern(regexp = "[a-zA-Z0-9]{4,50}", message = "Username must have only latin letters and numbers")
+    private final String username;
 
-    private String password;
+    @NotBlank(message = "Please provide a password")
+    @Size(min = 8, max = 50, message = "Password must be at least 8 characters")
+    @Pattern(
+            regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$",
+            message = "Password must have at least 1 number, 1 letter Uppercase and Lowercase and 1 special character"
+    )
+    private final String password;
 
-    private Set<Authority> authoritySet;
+//    private Set<Authority> authoritySet;
 }

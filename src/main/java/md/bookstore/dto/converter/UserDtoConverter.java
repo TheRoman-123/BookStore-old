@@ -14,13 +14,4 @@ public class UserDtoConverter {
         user.setAuthoritySet(Collections.singleton(Authority.USER));
         return user;
     }
-
-    public static UserDTO fromEntity(User user) {
-        return UserDTO.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .authoritySet(user.getAuthoritySet())
-                .build();
-    }
 }
