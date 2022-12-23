@@ -28,6 +28,15 @@ public class RestExceptionHandler {
         return new ResponseEntity<>("Check your offset and limit!", HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserAlreadyExistAuthenticationException.class)
+    public ResponseEntity<Object> handleException(UserAlreadyExistAuthenticationException exception) {
+        String message = (exception.getMessage() == null) ?
+                "User with such username already exist!" :
+                exception.getMessage();
+        LOGGER.warn(message);
+        return new ResponseEntity<>(message, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleException(EntityNotFoundException exception) {
         LOGGER.warn(exception.getMessage());
