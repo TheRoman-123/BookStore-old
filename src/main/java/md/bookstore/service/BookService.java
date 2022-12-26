@@ -6,7 +6,10 @@ import md.bookstore.exception.NotEnoughBooksException;
 import md.bookstore.repository.BookRepository;
 import md.bookstore.dto.BookToPrintDTO;
 import md.bookstore.dto.CartToSaveDTO;
-import md.bookstore.exception.OffsetOrLimitException;
+import md.bookstore.exception.IllegalPageException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,11 +33,15 @@ public class BookService {
     }
 
 
-    public List<BookToPrintDTO> getAllUntilLimit(Integer offset, Integer limit) {
-        if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-            throw new OffsetOrLimitException(offset, limit);
+    public List<BookToPrintDTO> getAll(Integer pageNumber, Integer pageSize) {
+        if (pageNumber == null || pageSize == null || pageSize <= 0 || pageNumber <= 0) {
+            throw new IllegalPageException(pageNumber, pageSize);
+//            TODO: Create other custom Exception for retrieving data by pages
         }
-        return bookRepository.findAllWithOffsetAndLimit(offset, limit)
+        // TODO: Sort needs to be obtained from frontend
+        Sort sort = Sort.by("title").ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        return bookRepository.findAll(pageable)
                 .stream()
                 .map(BookToPrintDTO::new)
                 .collect(Collectors.toList());

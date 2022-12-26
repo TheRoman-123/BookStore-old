@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import md.bookstore.repository.LiteraryWorkRepository;
 import md.bookstore.dto.LiteraryWorkDto;
 import md.bookstore.entity.LiteraryWork;
-import md.bookstore.exception.OffsetOrLimitException;
+import md.bookstore.exception.IllegalPageException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class LiteraryWorkService {
     // Later implement Pageable!
     public List<LiteraryWorkDto> getAllUntilLimit(Integer offset, Integer limit) {
         if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-            throw new OffsetOrLimitException(offset, limit);
+            throw new IllegalPageException(offset, limit);
         }
         return literaryWorkRepository.findLiteraryWorkEntityWithOffsetAndLimit(offset, limit)
                 .parallelStream()

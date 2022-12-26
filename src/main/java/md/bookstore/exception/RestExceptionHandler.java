@@ -15,14 +15,14 @@ import java.util.NoSuchElementException;
 public class RestExceptionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.class.getName());
 
-    @ExceptionHandler(OffsetOrLimitException.class)
-    public ResponseEntity<Object> handleException(OffsetOrLimitException exception) {
-        if (exception.getLimit() == null || exception.getOffset() == null) {
-            LOGGER.warn("Request GET doesn't have offset or limit!");
+    @ExceptionHandler(IllegalPageException.class)
+    public ResponseEntity<Object> handleException(IllegalPageException exception) {
+        if (exception.getPageSize() == null || exception.getPageNumber() == null) {
+            LOGGER.warn("Request GET doesn't have page number or page size!");
         } else {
             LOGGER.warn("Request has illegal arguments: " +
-                    "offset = " + exception.getOffset() + " < 0 or " +
-                    "limit = " + exception.getLimit() + " <= 0.");
+                    "page number = " + exception.getPageNumber() + " < 0 or " +
+                    "page size = " + exception.getPageSize() + " <= 0.");
         }
 
         return new ResponseEntity<>("Check your offset and limit!", HttpStatus.BAD_REQUEST);

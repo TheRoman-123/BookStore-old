@@ -17,11 +17,11 @@ public class BookController {
 
     @GetMapping("")
     public ResponseEntity<Object> getBookList(
-            @RequestParam(required = false) Integer offset,
-            @RequestParam(required = false) Integer limit
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer pageSize
     ) {
-        return (offset == null || limit == null) ?
+        return (pageNumber == null || pageSize == null) ?
                 new ResponseEntity<>(bookService.getAll(), HttpStatus.OK) :
-                new ResponseEntity<>(bookService.getAllUntilLimit(offset, limit), HttpStatus.OK);
+                new ResponseEntity<>(bookService.getAll(pageNumber, pageSize), HttpStatus.OK);
     }
 }

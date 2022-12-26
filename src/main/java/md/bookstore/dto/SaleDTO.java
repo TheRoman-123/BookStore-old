@@ -16,10 +16,12 @@ public class SaleDTO {
     private Long id;
     private LocalDateTime dateTime;
     private Double cost;
+    private Boolean confirmed;
 
-    private SaleDTO(Sale sale) {
+    public SaleDTO(Sale sale) {
         id = sale.getId();
         dateTime = sale.getDateTime();
         cost = sale.getCost();
+        confirmed = sale.getConfirmed();
     }
 }

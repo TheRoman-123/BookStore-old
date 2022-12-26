@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import md.bookstore.repository.GenreRepository;
 import md.bookstore.dto.GenreDTO;
 import md.bookstore.entity.Genre;
-import md.bookstore.exception.OffsetOrLimitException;
+import md.bookstore.exception.IllegalPageException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class GenreService {
 
     public List<GenreDTO> getAllUntilLimit(Integer offset, Integer limit) {
         if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-            throw new OffsetOrLimitException(offset, limit);
+            throw new IllegalPageException(offset, limit);
         }
         return genreRepository.findGenreEntityWithOffsetAndLimit(offset, limit)
                 .parallelStream()

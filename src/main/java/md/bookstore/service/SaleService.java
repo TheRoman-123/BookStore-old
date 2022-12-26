@@ -1,11 +1,16 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
+import md.bookstore.dto.SaleDTO;
 import md.bookstore.entity.Cart;
+import md.bookstore.entity.User;
 import md.bookstore.repository.CustomerRepository;
 import md.bookstore.repository.SaleRepository;
 import md.bookstore.dto.CartToSaveDTO;
 import md.bookstore.entity.Sale;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,11 +28,6 @@ public class SaleService {
     private BookService bookService;
 
     private CartService cartService;
-
-
-//    public SaleDTO get(Long id) {
-//        return null;
-//    }
 
     @Transactional
     public Long createSale(
@@ -72,5 +72,18 @@ public class SaleService {
                 .collect(Collectors.toList());
         cartService.deleteById(cartIds);
         saleRepository.deleteById(id);
+    }
+
+    public List<SaleDTO> getSales(User user) {
+        int page = 0; // zero-based page index
+//        TODO: Later get page size from argument
+        int size = 20;
+        Sort sort = Sort.by("dateTime").descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return saleRepository.findAllByCustomerUser(user, pageable)
+                .stream()
+                .map(SaleDTO::new)
+                .collect(Collectors.toList());
     }
 }

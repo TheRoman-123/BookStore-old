@@ -2,9 +2,12 @@ package md.bookstore.controller;
 
 import lombok.AllArgsConstructor;
 import md.bookstore.dto.CartToSaveDTO;
+import md.bookstore.entity.User;
 import md.bookstore.service.SaleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -15,11 +18,7 @@ import java.util.Set;
 public class SaleController {
     private SaleService saleService;
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Object> getSale (@PathVariable("id") Long id) {
-//        return new ResponseEntity<>(saleService.get(id), HttpStatus.OK);
-//    }
-
+//    @PreAuthorize("permitAll()")
     @PostMapping("")
     public ResponseEntity<Object> createSale (
             @RequestParam("cost") Double cost,
@@ -42,5 +41,12 @@ public class SaleController {
     public ResponseEntity<Object> declineSale (@PathVariable("id") Long id) {
         saleService.declineSale(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // To get user's sales
+    @PreAuthorize("hasAuthority('USER')")
+    @GetMapping("")               // Without {id} because of @AuthenticationPrincipal
+    public ResponseEntity<Object> getSales (@AuthenticationPrincipal User user) {
+        return new ResponseEntity<>(saleService.getSales(user), HttpStatus.OK);
     }
 }

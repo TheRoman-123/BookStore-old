@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import md.bookstore.repository.PublisherRepository;
 import md.bookstore.dto.PublisherDTO;
 import md.bookstore.entity.Publisher;
-import md.bookstore.exception.OffsetOrLimitException;
+import md.bookstore.exception.IllegalPageException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class PublisherService {
     // Later implement Pageable!
     public List<PublisherDTO> getAllUntilLimit(Integer offset, Integer limit) {
         if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-            throw new OffsetOrLimitException(offset, limit);
+            throw new IllegalPageException(offset, limit);
         }
         return publisherRepository.findPublisherEntityWithOffsetAndLimit(offset, limit)
                 .parallelStream()
