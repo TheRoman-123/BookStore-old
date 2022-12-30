@@ -20,11 +20,11 @@ public class UserService implements UserDetailsService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserDetails loadUserByUsername(String username) {
-        return userRepository.findUserByUsername(username)
+    public UserDetails loadUserByUsername(String email) {
+        return userRepository.findUserByUsername(email)
                 .orElseThrow(
                         () -> new UsernameNotFoundException(
-                                String.format("User with username: %s not found", username)
+                                String.format("User with email: %s not found", email)
                         )
                 );
     }

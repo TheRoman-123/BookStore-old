@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/authors")
+@RequestMapping("authors")
 public class AuthorController {
     private AuthorService authorService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Object> getAuthorList(
             @RequestParam(required = false) Integer offset,
             @RequestParam(required = false) Integer limit
@@ -24,12 +24,12 @@ public class AuthorController {
                 new ResponseEntity<>(authorService.getAllUntilLimit(offset, limit), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Object> getAuthorById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(authorService.get(id), HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Object> createAuthor(@RequestBody AuthorDto authorDto) {
 
         return new ResponseEntity<>(

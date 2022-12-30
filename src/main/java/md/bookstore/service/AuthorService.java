@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class AuthorService {
 
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
 
     // Later implement Pageable!
     public List<AuthorDto> getAllUntilLimit(Integer offset, Integer limit) {
