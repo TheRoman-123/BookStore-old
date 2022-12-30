@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 
 @Data
 @RequiredArgsConstructor
-public class UserDTO {
+public class UserDto {
     @Null
     private final Long id;
 

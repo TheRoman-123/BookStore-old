@@ -1,8 +1,7 @@
 package md.bookstore.controller;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dto.GenreDTO;
-import md.bookstore.service.GenreService;
+import md.bookstore.dto.GenreDto;
 import md.bookstore.service.GenreService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +30,15 @@ public class GenreController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createGenre(@RequestBody GenreDTO genreDTO) {
-        genreService.createGenre(genreDTO);
+    public ResponseEntity<Object> createGenre(@RequestBody GenreDto genreDto) {
+        genreService.createGenre(genreDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
         // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateGenre(@PathVariable("id") Long id, @RequestBody GenreDTO genreDTO) {
-        genreService.updateGenre(id, genreDTO);
+    public ResponseEntity<Object> updateGenre(@PathVariable("id") Long id, @RequestBody GenreDto genreDto) {
+        genreService.updateGenre(id, genreDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

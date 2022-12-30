@@ -37,18 +37,18 @@ public class LiteraryWorkService {
         return new LiteraryWorkDto(literaryWorkRepository.findById(id).orElseThrow());
     }
 
-    public void createLiteraryWork(LiteraryWorkDto literaryWorkDTO) {
-        if (literaryWorkDTO == null) {
+    public void createLiteraryWork(LiteraryWorkDto literaryWorkDto) {
+        if (literaryWorkDto == null) {
             throw new NullPointerException("LiteraryWork is null. LiteraryWork not created.");
         }
         LiteraryWork literaryWork = new LiteraryWork();
-        literaryWork.setTitle(literaryWorkDTO.getTitle());
+        literaryWork.setTitle(literaryWorkDto.getTitle());
         literaryWorkRepository.save(literaryWork);
     }
 
-    public void updateLiteraryWork(Long id, LiteraryWorkDto literaryWorkDTO) {
+    public void updateLiteraryWork(Long id, LiteraryWorkDto literaryWorkDto) {
         LiteraryWork literaryWork = literaryWorkRepository.getReferenceById(id);
-        literaryWork.setTitle(literaryWorkDTO.getTitle());
+        literaryWork.setTitle(literaryWorkDto.getTitle());
         literaryWorkRepository.save(literaryWork);
     }
 

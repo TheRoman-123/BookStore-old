@@ -12,14 +12,14 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthorDTO {
+public class AuthorDto {
 //    private Long id;
     @Size(max = 20)
     private String firstName;
     @Size(max = 20)
     private String lastName;
 
-    public AuthorDTO(Author author) {
+    public AuthorDto(Author author) {
 //        id = author.getId();
         firstName = author.getFirstName();
         lastName = author.getLastName();

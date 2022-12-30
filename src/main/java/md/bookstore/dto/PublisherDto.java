@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import md.bookstore.entity.Publisher;
 
 import javax.validation.constraints.Size;
-import java.io.Serializable;
 
 /**
  * A DTO for the {@link Publisher} entity
@@ -16,12 +15,12 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PublisherDTO {
+public class PublisherDto {
     private Long id;
     @Size(max = 50)
     private String publisherName;
 
-    public PublisherDTO(Publisher publisher) {
+    public PublisherDto(Publisher publisher) {
         id = publisher.getId();
         publisherName = publisher.getPublisherName();
     }

@@ -12,12 +12,12 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class GenreDTO {
+public class GenreDto {
     private Long id;
     @Size(max = 20)
     private String genreName;
 
-    public GenreDTO(Genre genre) {
+    public GenreDto(Genre genre) {
         id = genre.getId();
         genreName = genre.getGenreName();
     }

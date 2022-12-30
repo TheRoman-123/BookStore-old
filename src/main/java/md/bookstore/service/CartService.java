@@ -3,12 +3,11 @@ package md.bookstore.service;
 import lombok.AllArgsConstructor;
 import md.bookstore.repository.BookRepository;
 import md.bookstore.repository.CartRepository;
-import md.bookstore.dto.CartToSaveDTO;
+import md.bookstore.dto.CartToSaveDto;
 import md.bookstore.entity.Book;
 import md.bookstore.entity.Cart;
 import md.bookstore.entity.Sale;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -20,20 +19,20 @@ public class CartService {
     private CartRepository cartRepository;
     private final BookRepository bookRepository;
 
-    public Long saveCart(CartToSaveDTO cartToSaveDTO, Sale sale) {
-        Book book = bookRepository.getReferenceById(cartToSaveDTO.getBookId());
-        Cart cart = new Cart(cartToSaveDTO.getAmount(), sale, book);
+    public Long saveCart(CartToSaveDto cartToSaveDto, Sale sale) {
+        Book book = bookRepository.getReferenceById(cartToSaveDto.getBookId());
+        Cart cart = new Cart(cartToSaveDto.getAmount(), sale, book);
         cartRepository.save(cart);
         return cart.getId();
     }
 
 //    @Transactional
 //    TODO: Переделаешь так, чтобы список книг загружался одним запросом к базе
-    public void saveCarts(Set<CartToSaveDTO> cartToSaveDTOSet, Sale sale) {
+    public void saveCarts(Set<CartToSaveDto> cartToSaveDtoSet, Sale sale) {
         Set<Cart> carts = new HashSet<>();
-        for (CartToSaveDTO cartToSaveDTO : cartToSaveDTOSet) {
-            Book book = bookRepository.getReferenceById(cartToSaveDTO.getBookId());
-            carts.add(new Cart(cartToSaveDTO.getAmount(), sale, book));
+        for (CartToSaveDto cartToSaveDto : cartToSaveDtoSet) {
+            Book book = bookRepository.getReferenceById(cartToSaveDto.getBookId());
+            carts.add(new Cart(cartToSaveDto.getAmount(), sale, book));
         }
         cartRepository.saveAll(carts);
     }

@@ -1,16 +1,16 @@
 package md.bookstore.dto.converter;
 
-import md.bookstore.dto.UserDTO;
+import md.bookstore.dto.UserDto;
 import md.bookstore.entity.Authority;
 import md.bookstore.entity.User;
 
 import java.util.Collections;
 
 public class UserDtoConverter {
-    public static User fromDto(UserDTO userDTO) {
+    public static User fromDto(UserDto userDto) {
         User user = new User();
-        user.setUsername(user.getUsername());
-        user.setPassword(user.getPassword());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(userDto.getPassword());
         user.setAuthoritySet(Collections.singleton(Authority.USER));
         return user;
     }

@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CustomerDTO {
+public class CustomerDto {
     @Size(max = 20)
     private String firstName;
     @Size(max = 20)
@@ -31,7 +31,7 @@ public class CustomerDTO {
     @Size(max = 9)
     private String phoneNumber;
 
-    public CustomerDTO(Customer customer) {
+    public CustomerDto(Customer customer) {
         firstName = customer.getFirstName();
         lastName = customer.getLastName();
         birthDate = customer.getBirthDate();

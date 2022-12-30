@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SaleDTO {
+public class SaleDto {
     private Long id;
     private LocalDateTime dateTime;
     private Double cost;
     private Boolean confirmed;
 
-    public SaleDTO(Sale sale) {
+    public SaleDto(Sale sale) {
         id = sale.getId();
         dateTime = sale.getDateTime();
         cost = sale.getCost();

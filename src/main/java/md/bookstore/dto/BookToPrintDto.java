@@ -17,14 +17,14 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BookToPrintDTO implements BookDTO {
+public class BookToPrintDto implements BookDto {
     private Long id;
     private Double price;
     private String title;
-    private Set<AuthorDTO> authors;
+    private Set<AuthorDto> authors;
     private String imagePath;
 
-    public BookToPrintDTO(Book book) {
+    public BookToPrintDto(Book book) {
         id = book.getId();
         price = book.getPrice();
         title = book.getTitle();
@@ -32,7 +32,7 @@ public class BookToPrintDTO implements BookDTO {
         authors = book.getLiteraryWorks()
                 .stream()
                 .map(LiteraryWork::getAuthor)
-                .map(AuthorDTO::new)
+                .map(AuthorDto::new)
                 .collect(Collectors.toSet());
     }
 }

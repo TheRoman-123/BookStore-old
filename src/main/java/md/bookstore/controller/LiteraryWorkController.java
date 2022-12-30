@@ -29,15 +29,15 @@ public class LiteraryWorkController {
     }
 
     @PostMapping("")
-    public ResponseEntity<Object> createLiteraryWork(@RequestBody LiteraryWorkDto literaryWorkDTO) {
-        literaryWorkService.createLiteraryWork(literaryWorkDTO);
+    public ResponseEntity<Object> createLiteraryWork(@RequestBody LiteraryWorkDto literaryWorkDto) {
+        literaryWorkService.createLiteraryWork(literaryWorkDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
         // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateLiteraryWork(@PathVariable("id") Long id, @RequestBody LiteraryWorkDto literaryWorkDTO) {
-        literaryWorkService.updateLiteraryWork(id, literaryWorkDTO);
+    public ResponseEntity<Object> updateLiteraryWork(@PathVariable("id") Long id, @RequestBody LiteraryWorkDto literaryWorkDto) {
+        literaryWorkService.updateLiteraryWork(id, literaryWorkDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

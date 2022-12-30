@@ -1,4 +1,4 @@
 package md.bookstore.dto;
 
-public interface BookDTO {
+public interface BookDto {
 }

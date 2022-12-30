@@ -1,12 +1,12 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dto.SaleDTO;
+import md.bookstore.dto.SaleDto;
 import md.bookstore.entity.Cart;
 import md.bookstore.entity.User;
 import md.bookstore.repository.CustomerRepository;
 import md.bookstore.repository.SaleRepository;
-import md.bookstore.dto.CartToSaveDTO;
+import md.bookstore.dto.CartToSaveDto;
 import md.bookstore.entity.Sale;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,9 +33,9 @@ public class SaleService {
     public Long createSale(
             @NotNull Double cost,
             @NotNull Long customer_id,
-            @NotNull Set<CartToSaveDTO> cartToSaveDTOSet
+            @NotNull Set<CartToSaveDto> cartToSaveDtoSet
     ) {
-        if (cartToSaveDTOSet.isEmpty()) {
+        if (cartToSaveDtoSet.isEmpty()) {
             throw new IllegalArgumentException("Sale cart can't be empty!");
         }
         Sale sale = new Sale();
@@ -44,7 +44,7 @@ public class SaleService {
         sale.setDateTime(LocalDateTime.now());
         saleRepository.save(sale);
 
-        cartService.saveCarts(cartToSaveDTOSet, sale);
+        cartService.saveCarts(cartToSaveDtoSet, sale);
 
         return sale.getId();
     }
@@ -74,7 +74,7 @@ public class SaleService {
         saleRepository.deleteById(id);
     }
 
-    public List<SaleDTO> getSales(User user) {
+    public List<SaleDto> getSales(User user) {
         int page = 0; // zero-based page index
 //        TODO: Later get page size from argument
         int size = 20;
@@ -83,7 +83,7 @@ public class SaleService {
 
         return saleRepository.findAllByCustomerUser(user, pageable)
                 .stream()
-                .map(SaleDTO::new)
+                .map(SaleDto::new)
                 .collect(Collectors.toList());
     }
 }

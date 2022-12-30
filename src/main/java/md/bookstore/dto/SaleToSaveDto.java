@@ -15,8 +15,8 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SaleToSaveDTO {
+public class SaleToSaveDto {
     private Double cost;
-    private CustomerDTO customerDTO;
-    private Set<CartToSaveDTO> booksWithSaleAmount;
+    private CustomerDto customerDto;
+    private Set<CartToSaveDto> booksWithSaleAmount;
 }

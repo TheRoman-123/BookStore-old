@@ -2,7 +2,7 @@ package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
 import md.bookstore.repository.GenreRepository;
-import md.bookstore.dto.GenreDTO;
+import md.bookstore.dto.GenreDto;
 import md.bookstore.entity.Genre;
 import md.bookstore.exception.IllegalPageException;
 import org.springframework.stereotype.Service;
@@ -15,39 +15,39 @@ import java.util.stream.Collectors;
 public class GenreService {
     private GenreRepository genreRepository;
 
-    public List<GenreDTO> getAllUntilLimit(Integer offset, Integer limit) {
+    public List<GenreDto> getAllUntilLimit(Integer offset, Integer limit) {
         if (offset == null || limit == null || limit <= 0 || offset <= 0) {
             throw new IllegalPageException(offset, limit);
         }
         return genreRepository.findGenreEntityWithOffsetAndLimit(offset, limit)
                 .parallelStream()
-                .map(GenreDTO::new)
+                .map(GenreDto::new)
                 .collect(Collectors.toList());
     }
 
-    public List<GenreDTO> getAll() {
+    public List<GenreDto> getAll() {
         return genreRepository.findAll()
                 .parallelStream()
-                .map(GenreDTO::new)
+                .map(GenreDto::new)
                 .collect(Collectors.toList());
     }
 
-    public GenreDTO get(Long id) {
-        return new GenreDTO(genreRepository.findById(id).orElseThrow());
+    public GenreDto get(Long id) {
+        return new GenreDto(genreRepository.findById(id).orElseThrow());
     }
 
-    public void createGenre(GenreDTO genreDTO) {
-        if (genreDTO == null) {
+    public void createGenre(GenreDto genreDto) {
+        if (genreDto == null) {
             throw new NullPointerException("Genre is null. Genre not created.");
         }
         Genre genre = new Genre();
-        genre.setGenreName(genreDTO.getGenreName());
+        genre.setGenreName(genreDto.getGenreName());
         genreRepository.save(genre);
     }
 
-    public void updateGenre(Long id, GenreDTO genreDTO) {
+    public void updateGenre(Long id, GenreDto genreDto) {
         Genre genre = genreRepository.getReferenceById(id);
-        genre.setGenreName(genreDTO.getGenreName());
+        genre.setGenreName(genreDto.getGenreName());
         genreRepository.save(genre);
     }
 

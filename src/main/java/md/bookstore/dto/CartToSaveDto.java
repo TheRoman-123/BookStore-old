@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import md.bookstore.entity.Book;
 import md.bookstore.entity.Cart;
 
 /**
@@ -14,11 +13,11 @@ import md.bookstore.entity.Cart;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CartToSaveDTO {
+public class CartToSaveDto {
     private Long bookId;
     private Integer amount;
 
-    public CartToSaveDTO(Cart cart) {
+    public CartToSaveDto(Cart cart) {
         amount = cart.getAmount();
         bookId = cart.getBook().getId();
     }

@@ -2,7 +2,7 @@ package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
 import md.bookstore.repository.CustomerRepository;
-import md.bookstore.dto.CustomerDTO;
+import md.bookstore.dto.CustomerDto;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 public class CustomerService {
     private CustomerRepository customerRepository;
 
-    public CustomerDTO getUserById(Long id) {
+    public CustomerDto getCustomerById(Long id) {
         if (id == null || id < 0) {
-            throw new IllegalArgumentException("User id invalid!");
+            throw new IllegalArgumentException("Customer id invalid!");
         }
-        return new CustomerDTO(customerRepository.getReferenceById(id));
+        return new CustomerDto(customerRepository.getReferenceById(id));
     }
 }

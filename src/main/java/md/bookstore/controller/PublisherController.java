@@ -1,7 +1,7 @@
 package md.bookstore.controller;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dto.PublisherDTO;
+import md.bookstore.dto.PublisherDto;
 import md.bookstore.service.PublisherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +29,15 @@ public class PublisherController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createPublisher(@RequestBody PublisherDTO publisherDTO) {
-        publisherService.createPublisher(publisherDTO);
+    public ResponseEntity<Object> createPublisher(@RequestBody PublisherDto publisherDto) {
+        publisherService.createPublisher(publisherDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
         // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updatePublisher(@PathVariable("id") Long id, @RequestBody PublisherDTO publisherDTO) {
-        publisherService.updatePublisher(id, publisherDTO);
+    public ResponseEntity<Object> updatePublisher(@PathVariable("id") Long id, @RequestBody PublisherDto publisherDto) {
+        publisherService.updatePublisher(id, publisherDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

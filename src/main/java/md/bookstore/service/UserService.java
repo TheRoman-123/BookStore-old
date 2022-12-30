@@ -1,7 +1,7 @@
 package md.bookstore.service;
 
 import lombok.RequiredArgsConstructor;
-import md.bookstore.dto.UserDTO;
+import md.bookstore.dto.UserDto;
 import md.bookstore.dto.converter.UserDtoConverter;
 import md.bookstore.entity.User;
 import md.bookstore.exception.UserAlreadyExistAuthenticationException;
@@ -29,11 +29,11 @@ public class UserService implements UserDetailsService {
                 );
     }
 
-    public void createUser(UserDTO userDTO) throws UserAlreadyExistAuthenticationException {
-        if (userRepository.existsUserByUsername(userDTO.getUsername())) {
+    public void createUser(UserDto userDto) throws UserAlreadyExistAuthenticationException {
+        if (userRepository.existsUserByUsername(userDto.getUsername())) {
             throw new UserAlreadyExistAuthenticationException();
         }
-        User user = UserDtoConverter.fromDto(userDTO);
+        User user = UserDtoConverter.fromDto(userDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }

@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import md.bookstore.entity.Book;
 import md.bookstore.exception.NotEnoughBooksException;
 import md.bookstore.repository.BookRepository;
-import md.bookstore.dto.BookToPrintDTO;
-import md.bookstore.dto.CartToSaveDTO;
+import md.bookstore.dto.BookToPrintDto;
 import md.bookstore.exception.IllegalPageException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +12,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,19 +19,19 @@ import java.util.stream.Collectors;
 public class BookService {
     private BookRepository bookRepository;
 
-    public BookToPrintDTO getBook() {
+    public BookToPrintDto getBook() {
         return null;
     }
 
-    public List<BookToPrintDTO> getAll() {
+    public List<BookToPrintDto> getAll() {
         return bookRepository.findAll()
                 .stream()
-                .map(BookToPrintDTO::new)
+                .map(BookToPrintDto::new)
                 .collect(Collectors.toList());
     }
 
 
-    public List<BookToPrintDTO> getAll(Integer pageNumber, Integer pageSize) {
+    public List<BookToPrintDto> getAll(Integer pageNumber, Integer pageSize) {
         if (pageNumber == null || pageSize == null || pageSize <= 0 || pageNumber <= 0) {
             throw new IllegalPageException(pageNumber, pageSize);
 //            TODO: Create other custom Exception for retrieving data by pages
@@ -43,7 +41,7 @@ public class BookService {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return bookRepository.findAll(pageable)
                 .stream()
-                .map(BookToPrintDTO::new)
+                .map(BookToPrintDto::new)
                 .collect(Collectors.toList());
     }
 

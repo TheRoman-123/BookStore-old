@@ -1,7 +1,7 @@
 package md.bookstore.controller;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dto.CartToSaveDTO;
+import md.bookstore.dto.CartToSaveDto;
 import md.bookstore.entity.User;
 import md.bookstore.service.SaleService;
 import org.springframework.http.HttpStatus;
@@ -23,7 +23,7 @@ public class SaleController {
     public ResponseEntity<Object> createSale (
             @RequestParam("cost") Double cost,
             @RequestParam("user_id") Long customer_id,
-            @RequestBody Set<CartToSaveDTO> books
+            @RequestBody Set<CartToSaveDto> books
     ) {
         return new ResponseEntity<>(
                 saleService.createSale(cost, customer_id, books),

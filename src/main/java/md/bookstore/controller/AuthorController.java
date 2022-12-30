@@ -2,7 +2,7 @@ package md.bookstore.controller;
 
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dto.AuthorDTO;
+import md.bookstore.dto.AuthorDto;
 import md.bookstore.service.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +30,10 @@ public class AuthorController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> createAuthor(@RequestBody AuthorDTO authorDTO) {
+    public ResponseEntity<Object> createAuthor(@RequestBody AuthorDto authorDto) {
 
         return new ResponseEntity<>(
-                authorService.createAuthor(authorDTO),
+                authorService.createAuthor(authorDto),
                 HttpStatus.CREATED
         );
         // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
@@ -42,9 +42,9 @@ public class AuthorController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateAuthor(
             @PathVariable("id") Long id,
-            @RequestBody AuthorDTO authorDTO
+            @RequestBody AuthorDto authorDto
     ) {
-        authorService.updateAuthor(id, authorDTO);
+        authorService.updateAuthor(id, authorDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
