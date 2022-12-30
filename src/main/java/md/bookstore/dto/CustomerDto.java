@@ -24,9 +24,6 @@ public class CustomerDto {
     @Size(max = 20)
     private String lastName;
     private LocalDate birthDate;
-    @Email(message = "Please provide valid email")
-    @Size(max = 50)
-    private String email;
     @Pattern(regexp = "0[67]\\d{7}", message = "Enter valid phone number!")
     @Size(max = 9)
     private String phoneNumber;
@@ -35,7 +32,6 @@ public class CustomerDto {
         firstName = customer.getFirstName();
         lastName = customer.getLastName();
         birthDate = customer.getBirthDate();
-        email = customer.getEmail();
         phoneNumber = customer.getPhoneNumber();
     }
 }

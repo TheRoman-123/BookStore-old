@@ -2,20 +2,13 @@ package md.bookstore.dto;
 
 import lombok.*;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Null;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Data
 @RequiredArgsConstructor
 public class UserDto {
-    @Null
-    private final Long id;
-
-    @NotBlank(message = "Please provide a username")
-    @Size(min = 4, max = 50, message = "Username is too long")
-    @Pattern(regexp = "[a-zA-Z0-9]{4,50}", message = "Username must have only latin letters and numbers")
+    @Email(message = "Please provide valid email")
+    @Size(min = 6, max = 254, message = "Email too long")
     private final String username;
 
     @NotBlank(message = "Please provide a password")

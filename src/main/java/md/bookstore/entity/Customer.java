@@ -4,9 +4,6 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -30,9 +27,6 @@ public class Customer {
 
     @Column(name = "birth_date", columnDefinition = "DATE")
     private LocalDate birthDate;
-
-    @Column(length = 50, unique = true)
-    private String email;
 
     @Column(name = "phone_number", length = 9, unique = true, nullable = false)
     private String phoneNumber;
