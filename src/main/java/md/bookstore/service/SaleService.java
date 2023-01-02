@@ -1,10 +1,12 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
+import md.bookstore.dto.CustomerDto;
 import md.bookstore.dto.SaleDto;
+import md.bookstore.dto.converter.CustomerDtoConverter;
 import md.bookstore.entity.Cart;
+import md.bookstore.entity.Customer;
 import md.bookstore.entity.User;
-import md.bookstore.repository.CustomerRepository;
 import md.bookstore.repository.SaleRepository;
 import md.bookstore.dto.CartToSaveDto;
 import md.bookstore.entity.Sale;
@@ -24,23 +26,30 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SaleService {
     private SaleRepository saleRepository;
-    private CustomerRepository customerRepository;
     private BookService bookService;
-
     private CartService cartService;
+    private CustomerService customerService;
 
+    // Method for registered users
     @Transactional
     public Long createSale(
             @NotNull Double cost,
-            @NotNull Long customer_id,
-            @NotNull Set<CartToSaveDto> cartToSaveDtoSet
+            @NotNull Set<CartToSaveDto> cartToSaveDtoSet,
+            CustomerDto customerDto,
+            User user
     ) {
         if (cartToSaveDtoSet.isEmpty()) {
             throw new IllegalArgumentException("Sale cart can't be empty!");
         }
+        Customer customer = CustomerDtoConverter.fromDto(customerDto);
+        if (user == null) {
+            customerService.saveCustomer(customer);
+        } else {
+            customer = user.getCustomer();
+        }
         Sale sale = new Sale();
         sale.setCost(cost);
-        sale.setCustomer(customerRepository.getReferenceById(customer_id));
+        sale.setCustomer(customer);
         sale.setDateTime(LocalDateTime.now());
         saleRepository.save(sale);
 
@@ -49,6 +58,7 @@ public class SaleService {
         return sale.getId();
     }
 
+    // ORDER_PROCESSOR, ADMIN
     @Transactional
     public void confirmSale(@NotNull Long id) {
         Sale sale = saleRepository.getReferenceById(id);
@@ -64,6 +74,7 @@ public class SaleService {
         cartService.saveCarts(carts);
     }
 
+    // ORDER_PROCESSOR, ADMIN
     public void declineSale(@NotNull Long id) {
         List<Long> cartIds = saleRepository.getReferenceById(id)
                 .getCarts()
@@ -74,6 +85,7 @@ public class SaleService {
         saleRepository.deleteById(id);
     }
 
+    // USER
     public List<SaleDto> getSales(User user) {
         int page = 0; // zero-based page index
 //        TODO: Later get page size from argument

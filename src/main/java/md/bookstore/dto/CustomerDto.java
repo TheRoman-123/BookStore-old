@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import md.bookstore.entity.Customer;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -19,6 +18,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class CustomerDto {
+    private Long id;
     @Size(max = 20)
     private String firstName;
     @Size(max = 20)
@@ -29,6 +29,7 @@ public class CustomerDto {
     private String phoneNumber;
 
     public CustomerDto(Customer customer) {
+        id = customer.getId();
         firstName = customer.getFirstName();
         lastName = customer.getLastName();
         birthDate = customer.getBirthDate();
