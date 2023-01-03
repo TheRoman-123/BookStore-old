@@ -1,7 +1,6 @@
 package md.bookstore.service.jwt;
 
 import io.jsonwebtoken.Claims;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import md.bookstore.dto.jwt.JwtAuthentication;
 import md.bookstore.dto.jwt.JwtRequest;
@@ -11,8 +10,10 @@ import md.bookstore.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,10 +22,11 @@ import java.util.Map;
 public class AuthService {
 //    Use MongoDB or Redis instead
     private final Map<String, String> refreshStorage = new HashMap<>();
+    private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final UserService userService;
 
-    public JwtResponse login(@NonNull JwtRequest authRequest) {
+    public JwtResponse login(@NotNull JwtRequest authRequest) {
         final UserDetails user;
         try {
             user = userService.loadUserByUsername(authRequest.getEmail());
@@ -32,7 +34,7 @@ public class AuthService {
             throw new AuthException("Пользователь не найден");
         }
 
-        if (user.getPassword().equals(authRequest.getPassword())) {
+        if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user, authRequest.getRememberMe());
             final String refreshToken = jwtProvider.generateRefreshToken(user, authRequest.getRememberMe());
             refreshStorage.put(user.getUsername(), refreshToken);
@@ -42,7 +44,7 @@ public class AuthService {
         }
     }
 
-    public JwtResponse getAccessToken(@NonNull String refreshToken) {
+    public JwtResponse getAccessToken(@NotNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             String email = claims.getSubject();
@@ -62,7 +64,7 @@ public class AuthService {
         return new JwtResponse(null, null);
     }
 
-    public JwtResponse refresh(@NonNull String refreshToken) {
+    public JwtResponse refresh(@NotNull String refreshToken) {
         if (jwtProvider.validateRefreshToken(refreshToken)) {
             Claims claims = jwtProvider.getRefreshClaims(refreshToken);
             String email = claims.getSubject();

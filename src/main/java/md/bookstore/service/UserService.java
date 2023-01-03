@@ -32,7 +32,8 @@ public class UserService implements UserDetailsService {
                 );
     }
 
-    public User createUser(UserDto userDto) throws UserAlreadyExistAuthenticationException {
+    public User createUser(UserDto userDto)
+            throws UserAlreadyExistAuthenticationException {
         if (userRepository.existsUserByUsername(userDto.getUsername())) {
             throw new UserAlreadyExistAuthenticationException();
         }
