@@ -27,10 +27,10 @@ public class User implements UserDetails {
     @Column(name = "email", nullable = false, length = 254, unique = true)
     private String username;
 
-    @Column(name = "password", nullable = false, length = 50)
+    @Column(name = "password", nullable = false, length = 60)
     private String password;
 
-    @Column(name = "enabled", nullable = false)
+    @Column(name = "enabled", nullable = false, columnDefinition = "BOOLEAN default false")
     private Boolean enabled;
 
     @ManyToMany(fetch = FetchType.LAZY)

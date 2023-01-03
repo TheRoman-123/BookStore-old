@@ -60,7 +60,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers("/api/auth/login", "/api/auth/token").permitAll()
+                        .antMatchers("/api/auth/login", "/api/auth/token", "/register").permitAll()
                         .anyRequest().authenticated()
                         .and()
                         .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -78,7 +78,7 @@ public class WebConfig implements WebMvcConfigurer {
     static class PWEncoder {
         @Bean
         public PasswordEncoder passwordEncoder() {
-            int secure = 16;
+            int secure = 10;
             return new BCryptPasswordEncoder(secure, new SecureRandom());
         }
     }

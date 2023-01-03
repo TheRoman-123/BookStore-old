@@ -19,9 +19,9 @@ import java.time.LocalDate;
 @Builder
 public class CustomerDto {
     private Long id;
-    @Size(max = 20)
+    @Size(max = 20, message = "First name can't be longer than 20 symbols")
     private String firstName;
-    @Size(max = 20)
+    @Size(max = 20, message = "Last name can't be longer than 20 symbols")
     private String lastName;
     private LocalDate birthDate;
     @Pattern(regexp = "0[67]\\d{7}", message = "Enter valid phone number!")
