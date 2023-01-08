@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class CustomerUserDto {
+    @NotBlank(message = "Please write your name")
     @Size(max = 20, message = "First name can't be longer than 20 symbols")
     private String firstName;
     @Size(max = 20, message = "Last name can't be longer than 20 symbols")

@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -31,7 +29,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserAlreadyExistAuthenticationException.class)
     public ResponseEntity<Object> handleException(UserAlreadyExistAuthenticationException exception) {
         String message = (exception.getMessage() == null) ?
-                "User with such username already exist!" :
+                "User with such username already exists!" :
                 exception.getMessage();
         LOGGER.warn(message);
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);

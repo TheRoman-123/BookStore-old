@@ -27,6 +27,12 @@ public class AuthService {
     private final UserService userService;
 
     public JwtResponse login(@NotNull JwtRequest authRequest) {
+        if (refreshStorage.containsKey(authRequest.getEmail())) {
+            throw new AuthException("Пользователь уже в системе");
+        }
+        // TODO: Поставить в Authentication authenticated = false по истечении access токена
+//        До момента истечения перенаправлять на /profile, /token и /refresh.
+//        Другой вариант: Передавать String email, помеченный аннотацией @AuthenticationPrincipal в контроллере
         final UserDetails user;
         try {
             user = userService.loadUserByUsername(authRequest.getEmail());
@@ -38,6 +44,7 @@ public class AuthService {
             final String accessToken = jwtProvider.generateAccessToken(user, authRequest.getRememberMe());
             final String refreshToken = jwtProvider.generateRefreshToken(user, authRequest.getRememberMe());
             refreshStorage.put(user.getUsername(), refreshToken);
+            // TODO: Здесь! Засунуть Authentication в SecurityContext!!!
             return new JwtResponse(accessToken, refreshToken);
         } else {
             throw new AuthException("Неправильный пароль");

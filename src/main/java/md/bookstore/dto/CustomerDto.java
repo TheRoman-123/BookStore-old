@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import md.bookstore.entity.Customer;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 @Builder
 public class CustomerDto {
     private Long id;
+    @NotBlank(message = "Please write your name")
     @Size(max = 20, message = "First name can't be longer than 20 symbols")
     private String firstName;
     @Size(max = 20, message = "Last name can't be longer than 20 symbols")
