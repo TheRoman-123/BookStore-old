@@ -1,6 +1,6 @@
 package md.bookstore.exception;
 
-public class AuthException extends RuntimeException {
+public final class AuthException extends RuntimeException {
     public AuthException(String message) {
         super(message);
     }

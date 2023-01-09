@@ -20,7 +20,7 @@ public class AuthController {
 
     @PostMapping("login")
     public ResponseEntity<Object> login(@RequestBody JwtRequest authRequest) {
-        final JwtResponse token = authService.login(authRequest);
+        JwtResponse token = authService.login(authRequest);
         return ResponseEntity.ok(token);
     }
 

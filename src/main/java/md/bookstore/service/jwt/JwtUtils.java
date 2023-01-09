@@ -19,10 +19,13 @@ public final class JwtUtils {
     }
 
     private static Set<Authority> getAuthorities(Claims claims) {
-        final List<String> authorities = claims.get("authorities", List.class);
-        return authorities.stream()
-                .map(Role::valueOf)
-                .map(Authority::new)
-                .collect(Collectors.toSet());
+        List<String> authorities = claims.get("authorities", List.class);
+        if (authorities != null) {
+            return authorities.stream()
+                    .map(Role::valueOf)
+                    .map(Authority::new)
+                    .collect(Collectors.toSet());
+        }
+        return null;
     }
 }

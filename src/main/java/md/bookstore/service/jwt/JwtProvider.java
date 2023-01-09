@@ -7,6 +7,7 @@ import io.jsonwebtoken.security.SignatureException;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,8 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -46,7 +49,7 @@ public class JwtProvider {
             Jwts.parserBuilder()
                     .setSigningKey(jwtSecret)
                     .build()
-                    .parseClaimsJwt(token);
+                    .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException expEx) {
             log.error("Token expired", expEx);
@@ -87,12 +90,17 @@ public class JwtProvider {
                 .atZone(ZoneId.systemDefault())
                 .toInstant();
         Date accessExpiration = Date.from(accessExpirationInstant);
+        List<String> authorities = user.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .setExpiration(accessExpiration)
                 .signWith(jwtAccessSecret)
-//                .claim("authorities", user.getAuthorities())
+                .claim("authorities", authorities)
 //                .claim("firstName", user.getFirstName())     -- Можно будет переделать в Customer
                 .claim("rememberMe", rememberMe)
                 .compact();
