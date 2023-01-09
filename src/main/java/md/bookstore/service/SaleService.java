@@ -1,12 +1,10 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.dto.CustomerDto;
 import md.bookstore.dto.SaleDto;
 import md.bookstore.dto.converter.CustomerDtoConverter;
 import md.bookstore.entity.Cart;
 import md.bookstore.entity.Customer;
-import md.bookstore.entity.User;
 import md.bookstore.repository.SaleRepository;
 import md.bookstore.dto.CartToSaveDto;
 import md.bookstore.entity.Sale;
@@ -35,21 +33,26 @@ public class SaleService {
     public Long createSale(
             @NotNull Double cost,
             @NotNull Set<CartToSaveDto> cartToSaveDtoSet,
-            CustomerDto customerDto,
-            User user
+            @NotNull String email,
+            String firstName,
+            String phoneNumber
     ) {
         if (cartToSaveDtoSet.isEmpty()) {
             throw new IllegalArgumentException("Sale cart can't be empty!");
         }
-        Customer customer = CustomerDtoConverter.fromDto(customerDto);
-        if (user == null) {
+
+        Customer customer;
+        if (email.equals("anonymousUser")) {
+            customer = CustomerDtoConverter.getCustomer(firstName, phoneNumber);
             customerService.saveCustomer(customer);
         } else {
-            customer = user.getCustomer();
+            customer = customerService.getCustomerByUserEmail(email);
         }
+
         Sale sale = new Sale();
-        sale.setCost(cost);
         sale.setCustomer(customer);
+        sale.setCost(cost);
+        sale.setConfirmed(false);
         sale.setDateTime(LocalDateTime.now());
         saleRepository.save(sale);
 
@@ -86,16 +89,24 @@ public class SaleService {
     }
 
     // USER
-    public List<SaleDto> getSales(User user) {
-        int page = 0; // zero-based page index
-//        TODO: Later get page size from argument
-        int size = 20;
+    public List<SaleDto> getSales(String email, Integer page, Integer size) {
         Sort sort = Sort.by("dateTime").descending();
         Pageable pageable = PageRequest.of(page, size, sort);
+//        User user = (User) userService.loadUserByUsername(email);
 
-        return saleRepository.findAllByCustomerUser(user, pageable)
+//        return saleRepository.findAllByCustomerUser(user, pageable)
+        return saleRepository.findAllByCustomerEmail(email, pageable)
                 .stream()
                 .map(SaleDto::new)
                 .collect(Collectors.toList());
     }
+
+    public List<SaleDto> getSales(String email) {
+        return saleRepository.findAllByCustomerEmail(email)
+                .stream()
+                .map(SaleDto::new)
+                .collect(Collectors.toList());
+    }
+
+
 }

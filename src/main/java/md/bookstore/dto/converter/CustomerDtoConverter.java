@@ -23,4 +23,17 @@ public class CustomerDtoConverter {
         customerDto.setPhoneNumber(customerUserDto.getPhoneNumber());
         return customerDto;
     }
+
+    public static Customer getCustomer(String firstName, String phoneNumber) {
+        if (firstName == null || phoneNumber == null || firstName.isEmpty() || phoneNumber.isEmpty()) {
+            throw new IllegalArgumentException("Customer name or phoneNumber are empty");
+        }
+        if (!phoneNumber.matches("0[67]\\d{7}")) {
+            throw new IllegalArgumentException("Customer phoneNumber invalid");
+        }
+        Customer customer = new Customer();
+        customer.setFirstName(firstName);
+        customer.setPhoneNumber(phoneNumber);
+        return customer;
+    }
 }

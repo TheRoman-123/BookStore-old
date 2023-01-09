@@ -12,6 +12,9 @@ import md.bookstore.repository.CustomerRepository;
 import md.bookstore.dto.CustomerDto;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
+import java.util.NoSuchElementException;
+
 @Service
 @AllArgsConstructor
 public class CustomerService {
@@ -44,5 +47,13 @@ public class CustomerService {
 
     public void saveCustomer(Customer customer) {
         customerRepository.save(customer);
+    }
+
+    public Customer getCustomerByUserEmail(String email) {
+        try {
+            return customerRepository.getCustomerByUserEmail(email).get();
+        } catch (NoSuchElementException e) {
+            throw new EntityNotFoundException("Customer with email " + email + "doesn't exist");
+        }
     }
 }

@@ -2,8 +2,6 @@ package md.bookstore.controller;
 
 import lombok.AllArgsConstructor;
 import md.bookstore.dto.CartToSaveDto;
-import md.bookstore.dto.CustomerDto;
-import md.bookstore.entity.User;
 import md.bookstore.service.SaleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,14 +20,14 @@ public class SaleController {
 //    @PreAuthorize("permitAll()")
     @PostMapping
     public ResponseEntity<Object> createSale (
+            @RequestParam(value = "customerName", required = false) String firstName,
+            @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
             @RequestParam("cost") Double cost,
-//            @RequestParam("user_id") Long customer_id,
             @RequestBody Set<CartToSaveDto> books,
-            @RequestBody CustomerDto customerDto,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal String email
     ) {
         return new ResponseEntity<>(
-                saleService.createSale(cost, books, customerDto, user),
+                saleService.createSale(cost, books, email, firstName, phoneNumber),
                 HttpStatus.CREATED
         );
     }
@@ -49,9 +47,15 @@ public class SaleController {
     }
 
     // To get user's sales
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('USER')")       // Разберись с аннотацией. Не работает проверка на аутентификацию.
     @GetMapping
-    public ResponseEntity<Object> getSales (@AuthenticationPrincipal User user) {
-        return new ResponseEntity<>(saleService.getSales(user), HttpStatus.OK);
+    public ResponseEntity<Object> getSales (
+            @AuthenticationPrincipal String email,
+            @RequestParam(value = "page", required = false) Integer page,
+            @RequestParam(value = "size", required = false) Integer size
+    ) {
+        return (page == null || size == null) ?
+                ResponseEntity.ok(saleService.getSales(email)) :
+                ResponseEntity.ok(saleService.getSales(email, page, size));
     }
 }
