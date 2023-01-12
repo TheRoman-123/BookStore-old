@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import md.bookstore.entity.Publisher;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
@@ -17,6 +18,7 @@ import javax.validation.constraints.Size;
 @Builder
 public class PublisherDto {
     private Long id;
+    @NotBlank(message = "Please provide publisher's name")
     @Size(max = 50)
     private String publisherName;
 

@@ -5,7 +5,10 @@ import md.bookstore.dto.PublisherDto;
 import md.bookstore.service.PublisherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
@@ -13,34 +16,38 @@ import org.springframework.web.bind.annotation.*;
 public class PublisherController {
     private PublisherService publisherService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Object> getPublisherList(
-            @RequestParam(required = false) Integer offset,
-            @RequestParam(required = false) Integer limit
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
+            @RequestParam String sortCriteria,
+            @RequestParam boolean desc
     ) {
-        return (offset == null || limit == null) ?
-                new ResponseEntity<>(publisherService.getAll(), HttpStatus.OK) :
-                new ResponseEntity<>(publisherService.getAllUntilLimit(offset, limit), HttpStatus.OK);
+        return ResponseEntity.ok(publisherService.getAll(pageNumber, pageSize, sortCriteria, desc));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getPublisherById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(publisherService.get(id), HttpStatus.OK);
+        return new ResponseEntity<>(publisherService.getPublisherDtoById(id), HttpStatus.OK);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<Object> createPublisher(@RequestBody PublisherDto publisherDto) {
-        publisherService.createPublisher(publisherDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-        // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
+    @PreAuthorize("hasAnyAuthority('CONTENT_MANAGER', 'ADMIN')")
+    @PostMapping
+    public ResponseEntity<Object> createPublisher(@RequestBody @Valid PublisherDto publisherDto) {
+        return new ResponseEntity<>(
+                publisherService.createPublisher(publisherDto),
+                HttpStatus.CREATED
+        );
     }
 
+    @PreAuthorize("hasAnyAuthority('CONTENT_MANAGER', 'ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePublisher(@PathVariable("id") Long id, @RequestBody PublisherDto publisherDto) {
         publisherService.updatePublisher(id, publisherDto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('CONTENT_MANAGER', 'ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deletePublisher(@PathVariable("id") Long id) {
         publisherService.deletePublisher(id);

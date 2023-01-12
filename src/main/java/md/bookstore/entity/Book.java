@@ -4,7 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Min;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,12 +25,12 @@ public class Book {
     @Column(precision = 6, scale = 2, nullable = false)
     private Double price;
 
+    @Min(value = 0, message = "Book amount can't be negative")
     @Column(nullable = false)
     private Integer amount;
 
-    @Size(max = 100)
-    @Column(name = "image_path", nullable = false, length = 100)
-    private String imagePath;
+    @Column
+    private byte[] image;
 
     @ManyToMany(fetch = FetchType.LAZY, mappedBy = "books")
     @ToString.Exclude

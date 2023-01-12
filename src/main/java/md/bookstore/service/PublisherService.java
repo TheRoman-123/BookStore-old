@@ -4,50 +4,50 @@ import lombok.AllArgsConstructor;
 import md.bookstore.repository.PublisherRepository;
 import md.bookstore.dto.PublisherDto;
 import md.bookstore.entity.Publisher;
-import md.bookstore.exception.IllegalPageException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class PublisherService {
     private PublisherRepository publisherRepository;
 
-    // Later implement Pageable!
-    public List<PublisherDto> getAllUntilLimit(Integer offset, Integer limit) {
-        if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-            throw new IllegalPageException(offset, limit);
-        }
-        return publisherRepository.findPublisherEntityWithOffsetAndLimit(offset, limit)
-                .parallelStream()
-                .map(PublisherDto::new)
-                .collect(Collectors.toList());
+    public List<PublisherDto> getAll(
+            Integer pageNumber,
+            Integer pageSize,
+            String sortCriteria,
+            boolean desc
+    ) {
+        return new CommonService<Publisher>().getAll(
+                pageNumber, pageSize, sortCriteria, desc,
+                publisherRepository,
+                PublisherDto::new
+        );
     }
 
-    public List<PublisherDto> getAll() {
-        return publisherRepository.findAll()
-                .parallelStream()
-                .map(PublisherDto::new)
-                .collect(Collectors.toList());
+    public PublisherDto getPublisherDtoById(Long id) {
+        return new PublisherDto(publisherRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public PublisherDto get(Long id) {
-        return new PublisherDto(publisherRepository.findById(id).orElseThrow());
+    public Publisher getPublisherById(Long id) {
+        return publisherRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public void createPublisher(PublisherDto publisherDto) {
-        if (publisherDto == null) {
-            throw new NullPointerException("Publisher is null. Publisher not created.");
+    public Long createPublisher(PublisherDto publisherDto) {
+        if (publisherRepository.existsPublisherByPublisherName(publisherDto.getPublisherName())) {
+            throw new EntityExistsException("Publisher with provided name already exists");
         }
         Publisher publisher = new Publisher();
         publisher.setPublisherName(publisherDto.getPublisherName());
         publisherRepository.save(publisher);
+        return publisher.getId();
     }
 
     public void updatePublisher(Long id, PublisherDto publisherDto) {
-        Publisher publisher = publisherRepository.getReferenceById(id);
+        Publisher publisher = publisherRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         publisher.setPublisherName(publisherDto.getPublisherName());
         publisherRepository.save(publisher);
     }

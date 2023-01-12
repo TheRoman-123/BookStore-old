@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
@@ -47,9 +48,15 @@ public class RestExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Object> handleException(IOException exception) {
+        LOGGER.warn(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleException(IllegalArgumentException exception) {
-        LOGGER.warn(exception.getMessage());
+        LOGGER.error(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 //        Может, потом найдёшь более подходящий статус
     }

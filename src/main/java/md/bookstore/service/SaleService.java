@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -64,13 +65,16 @@ public class SaleService {
     // ORDER_PROCESSOR, ADMIN
     @Transactional
     public void confirmSale(@NotNull Long id) {
-        Sale sale = saleRepository.getReferenceById(id);
+        Sale sale = saleRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Sale with id=" + id + "doesn't exist")
+        );
         if (sale.getConfirmed()) {
             throw new IllegalStateException("Sale #" + id + " is already confirmed");
         }
         Set<Cart> carts = sale.getCarts();
         for (Cart cart : carts) {
             bookService.takeFromWarehouse(cart.getBook(), cart.getAmount());
+            // If getBook doesn't work, use bookService
         }
         sale.setConfirmed(true);
         saleRepository.save(sale);

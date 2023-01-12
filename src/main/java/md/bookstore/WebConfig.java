@@ -5,7 +5,6 @@ import md.bookstore.filter.JwtFilter;
 import md.bookstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,7 +20,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.security.SecureRandom;
 
-@Configuration
 @EnableWebMvc
 @EnableWebSecurity
 @AllArgsConstructor
@@ -40,21 +38,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeHttpRequests(authorize -> authorize
-//                        .antMatchers("/", "/books/**").permitAll()
-//                        .antMatchers("/sales/confirm/**", "/sales/decline/**")
-//                                .hasAuthority("ADMIN")
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin(form -> form
-//                        .loginPage("/login")
-//                        .permitAll()
-//                )
-//                .rememberMe()
-//                .and()
-//                .logout(LogoutConfigurer::permitAll);
-
         http
                 .httpBasic().disable()
                 .csrf().disable()
@@ -62,6 +45,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
                         .antMatchers(HttpMethod.POST,"/api/auth/login", "/api/auth/token", "/register", "/sales").permitAll()
+                        .antMatchers(HttpMethod.GET).permitAll()
                         .antMatchers(HttpMethod.GET,"/sales").authenticated()
                         .anyRequest().authenticated()
                         .and()

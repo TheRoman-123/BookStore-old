@@ -22,13 +22,13 @@ public class BookToPrintDto implements BookDto {
     private Double price;
     private String title;
     private Set<AuthorDto> authors;
-    private String imagePath;
+//    private byte[] image;
 
     public BookToPrintDto(Book book) {
         id = book.getId();
         price = book.getPrice();
         title = book.getTitle();
-        imagePath = book.getImagePath();
+//        image = book.getImage();
         authors = book.getLiteraryWorks()
                 .stream()
                 .map(LiteraryWork::getAuthor)

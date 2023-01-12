@@ -1,53 +1,46 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
+import md.bookstore.dto.BookImagesDto;
+import md.bookstore.dto.BookToSaveDto;
+import md.bookstore.dto.converter.BookDtoConverter;
 import md.bookstore.entity.Book;
 import md.bookstore.exception.NotEnoughBooksException;
 import md.bookstore.repository.BookRepository;
 import md.bookstore.dto.BookToPrintDto;
-import md.bookstore.exception.IllegalPageException;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import md.bookstore.repository.LiteraryWorkRepository;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class BookService {
+    private PublisherService publisherService;
     private BookRepository bookRepository;
+    private LiteraryWorkRepository literaryWorkRepository;
 
-    public BookToPrintDto getBook() {
-        return null;
+    public BookToPrintDto getBook(Long bookId) {
+        return new BookToPrintDto(bookRepository.findById(bookId).orElseThrow(ResourceNotFoundException::new));
     }
 
-    public List<BookToPrintDto> getAll() {
-        return bookRepository.findAll()
-                .stream()
-                .map(BookToPrintDto::new)
-                .collect(Collectors.toList());
+    public List<BookToPrintDto> getAll(Integer pageNumber, Integer pageSize, String sortCriteria, boolean desc) {
+        return new CommonService<Book>().getAll(
+                pageNumber, pageSize, sortCriteria, desc,
+                bookRepository,
+                BookToPrintDto::new
+        );
     }
 
-
-    public List<BookToPrintDto> getAll(Integer pageNumber, Integer pageSize) {
-        if (pageNumber == null || pageSize == null || pageSize <= 0 || pageNumber <= 0) {
-            throw new IllegalPageException(pageNumber, pageSize);
-//            TODO: Create other custom Exception for retrieving data by pages
-        }
-        // TODO: Sort needs to be obtained from frontend
-        Sort sort = Sort.by("title").ascending();
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        return bookRepository.findAll(pageable)
-                .stream()
-                .map(BookToPrintDto::new)
-                .collect(Collectors.toList());
+    public BookImagesDto getBookImages(List<Long> bookIds) {
+        return new BookImagesDto(bookRepository.findAllById(bookIds));
     }
 
     public boolean hasWarehouseEnoughBooks(Long id, Integer amount) {
-        Book book = bookRepository.getReferenceById(id);
-        return book.getAmount() >= amount;
+        return bookRepository.findAmountById(id).orElse(0) >= amount;
     }
 
     public void takeFromWarehouse(Book book, Integer amount) {
@@ -57,5 +50,22 @@ public class BookService {
         book.setAmount(book.getAmount() - amount);
     }
 
-//    public List<>
+    public Long createBook(BookToSaveDto bookToSaveDto, MultipartFile image)
+            throws IOException {
+        Book book = BookDtoConverter.fromDto(bookToSaveDto);
+
+        book.setPublisher(
+                publisherService.getPublisherById(bookToSaveDto.getPublisherId())
+        );
+
+        book.setLiteraryWorks(
+                literaryWorkRepository.findAllByIdIn(bookToSaveDto.getLitworkIds())
+        );
+
+        book.setImage(image.getBytes());
+
+        bookRepository.save(book);
+
+        return book.getId();
+    }
 }
