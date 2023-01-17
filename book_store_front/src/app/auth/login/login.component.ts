@@ -1,26 +1,45 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginForm } from 'src/app/types/Auth';
 import { AuthService } from '../auth.service';
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {Router} from "@angular/router";
+import {Constants} from "../../constants/Constants";
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  form: LoginForm = {
-    email: '',
-    password: '',
-  };
+  loginForm = this.formBuilder.group({
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(Constants.passwordPattern)]
+    ),
+  });
 
-  constructor(private authService: AuthService) {}
+  loading: boolean = false;
 
-  ngOnInit(): void {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
-  submit() {
-    this.authService.login(this.form);
+  ngOnInit() {
+  }
+
+  onSubmit() {
+    this.loading = true;
+    this.authService.login(this.loginForm.value)
+      .subscribe(data => {
+        this.loading = false;
+        // this.router.navigate(["/"]).then();
+      });
   }
 
   isLoading() {
-    return this.authService.isLoading;
+    return this.loading;
   }
 }

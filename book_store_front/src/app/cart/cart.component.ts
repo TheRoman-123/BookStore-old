@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnChanges, OnInit} from '@angular/core';
 import { CartService } from './cart.service';
 import {BookWithSaleAmount} from "../types/BookWithSaleAmount";
 import {SaleService} from "../services/sale.service";
@@ -8,8 +8,9 @@ import {SaleService} from "../services/sale.service";
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
-export class CartComponent implements OnInit {
+export class CartComponent implements OnInit, OnChanges {
   booksWithSaleAmount: Array<BookWithSaleAmount> = [];
+  cost: number = 0;
 
   constructor(private cartService: CartService,
               private saleService: SaleService) {}
@@ -18,13 +19,17 @@ export class CartComponent implements OnInit {
     this.booksWithSaleAmount = this.cartService.getBooks();
   }
 
+  ngOnChanges(): void {
+    this.cost = this.booksWithSaleAmount.map(a => a.book.price)
+        .reduce((sum, price) => sum + price, 0);
+  }
+
+
+
 
   createSale() {
-    let cost: number =
-      this.booksWithSaleAmount.map(a => a.book.price)
-        .reduce((sum, price) => sum + price, 0);
 
-    this.saleService.createSale(cost, 1, this.booksWithSaleAmount).subscribe(
+    this.saleService.createSale(this.cost, 1, this.booksWithSaleAmount).subscribe(
       (data) => {
         alert("Your order successfully saved! Order ID:" + (data as number));
       }

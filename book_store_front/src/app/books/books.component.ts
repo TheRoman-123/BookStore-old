@@ -14,8 +14,13 @@ export class BooksComponent implements OnInit {
   isShowing: boolean = true;
 
   ngOnInit(): void {
-    this.booksService.getBooks().subscribe((data) => {
-      this.books = data;
+    this.booksService.getBooks().subscribe({
+      next: (data) => {
+        this.books = data;
+      },
+      error: err => {
+
+      }
     });
 
     /*this.booksService.getBookImages().subscribe((data) => {

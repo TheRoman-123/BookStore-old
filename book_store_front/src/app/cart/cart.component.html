@@ -10,7 +10,10 @@
       </div>
   </div>
   <div *ngIf="booksWithSaleAmount.length == 0">No books in your cart</div>
+
+
   <div class="order" *ngIf="booksWithSaleAmount.length > 0">
+<!--    <div class="total-sum">Total sum: {{  }}</div>-->
     <input class="w-full border bg-yellow-400 rounded p-3 cursor-pointer" name="order" type="submit" value="Order">
   </div>
 </form>

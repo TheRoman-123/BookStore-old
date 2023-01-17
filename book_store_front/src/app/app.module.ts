@@ -9,8 +9,18 @@ import {HttpClientModule} from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
 
 @NgModule({
-  declarations: [AppComponent, CartComponent],
-    imports: [BrowserModule, BooksModule, AppRoutingModule, AuthModule, HttpClientModule, FormsModule],
+  declarations: [
+    AppComponent,
+    CartComponent
+  ],
+  imports: [
+    BrowserModule,
+    BooksModule,
+    AppRoutingModule,
+    AuthModule,
+    HttpClientModule,
+    FormsModule
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

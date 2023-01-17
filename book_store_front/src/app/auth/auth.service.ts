@@ -1,68 +1,88 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { LoginForm, RegisterForm } from '../types/Auth';
+import { HttpClient } from '@angular/common/http';
+import {map, Observable, of, tap} from "rxjs";
+import {catchError} from "rxjs/operators";
+import {JWTResponse} from "../types/JWTResponse";
+import {AppCookieService} from "../services/app-cookie.service";
+import {JwtService} from "../services/jwt.service";
+import {LoginRequest} from "../types/LoginRequest";
+import {RegisterRequest} from "../types/RegisterRequest";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class AuthService {
+  serverUrl: string = 'http://localhost:8080';
   isAuthenticated: boolean = false;
-  isLoading: boolean = false;
 
-  constructor(private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private jwtService: JwtService,
+    private appCookieService: AppCookieService
+  ) {}
 
-  login(form: LoginForm) {
-    /*if (this.isLoading) return;
-
-    this.isLoading = true;
-
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, form.email, form.password)
-      .then((userCredential) => {
-        this.isAuthenticated = true;
-        this.router.navigate(['']);
+  register(credentials: Partial<RegisterRequest>) {
+    const url = this.serverUrl + '/register';
+    return this.http.post(url, credentials).pipe(
+      map(data => data as number),
+      catchError((err) => {
+        alert(err);
+        return of(-1);
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        this.isAuthenticated = false;
-      })
-      .finally(() => (this.isLoading = false));*/
+    );
   }
 
-  passwordMatched: boolean = true;
-  register(form: RegisterForm) {
-    /*if (this.isLoading) return;
-
-    this.isLoading = true;
-
-    if (form.password !== form.confirm_password) {
-      this.passwordMatched = false;
-      return;
-    }
-
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, form.email, form.password)
-      .then((userCredential) => {
-        this.isAuthenticated = true;
-      })
-      .catch((error) => {
-        this.isAuthenticated = false;
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      })
-      .finally(() => (this.isLoading = false));*/
+  login(credentials: Partial<LoginRequest>) {
+    const url = this.serverUrl + '/api/auth/login';
+    return this.http.post(url, credentials).pipe(
+      tap(data => {
+        this.processReceivedTokens(data as JWTResponse);
+      }),
+      catchError(
+        (err) => {
+          alert('Попробуйте связаться с сервером позже.' + err);
+          return of({});
+        }
+      )
+    );
   }
 
-  logout() {
-    /*const auth = getAuth();
-    signOut(auth)
-      .then(() => {
-        this.router.navigate(['login']);
-        this.isAuthenticated = false;
-      })
-      .catch((error) => {
-        // An error happened.
-      });*/
+  processReceivedTokens(jwtResponse: JWTResponse) {
+    this.jwtService.setTokens(jwtResponse.accessToken, jwtResponse.refreshToken);
+  }
+
+  refreshAccessToken(): Observable<any> {
+    let refreshToken: { [key: string]: string } = {
+      refreshToken: this.appCookieService.get('refresh')
+    };
+
+    /*return new Promise((resolve, reject) => {
+      this.http.post('/api/auth/token', refreshToken)
+        .pipe(
+          map(data => data as JWTResponse)
+        )
+        .subscribe({
+          next: (response) => {
+            if (response.accessToken) {
+              this.appCookieService.set('jwt', response['accessToken']);
+              this.appCookieService.set('refresh', response['refreshToken']);
+              resolve(response);
+            } else {
+              reject(response);
+            }
+          },
+          error: err => {
+            reject(err);
+          }
+        });
+    });*/
+    return this.http.post('/api/auth/token', refreshToken)
+        .pipe(
+          // map(data => data as JWTResponse)
+        );
+  }
+
+  getJWT(): string | null {
+    return this.appCookieService.get('jwt');
   }
 }

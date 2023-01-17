@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RegisterForm } from 'src/app/types/Auth';
 import { AuthService } from '../auth.service';
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
+import {Constants} from "../../constants/Constants";
 
 @Component({
   selector: 'app-register',
@@ -8,23 +9,47 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  form: RegisterForm = {
-    email: '',
-    password: '',
-    confirm_password: '',
-  };
+  form = this.formBuilder.group({
+    firstName: new FormControl('', [
+      Validators.required,
+      Validators.minLength(1),
+      Validators.pattern(Constants.namePattern)
+    ]),
+    lastName: new FormControl('', [
+      Validators.minLength(1),
+      Validators.pattern(Constants.namePattern)
+    ]),
+    phoneNumber: new FormControl('', [
+      Validators.required,
+      Validators.pattern(Constants.phonePattern)
+    ]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [
+      Validators.required,
+      Validators.minLength(8),
+      Validators.pattern(Constants.passwordPattern)]
+    ),
+  });
 
-  passwordMatched: boolean = true;
+  loading: boolean = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {}
 
-  submit() {
-    this.authService.register(this.form);
+  onSubmit() {
+    this.loading = true;
+    this.authService.register(this.form.value)
+      .subscribe(customerId => {
+        alert(customerId);
+        this.loading = false;
+      });
   }
 
   isLoading() {
-    return this.authService.isLoading;
+    return this.loading;
   }
 }
