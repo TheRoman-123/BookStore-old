@@ -28,26 +28,23 @@ public class AuthService {
 
     public JwtResponse login(@NotNull JwtRequest authRequest) {
         if (refreshStorage.containsKey(authRequest.getEmail())) {
-            throw new AuthException("Пользователь уже в системе");
+            throw new AuthException("User already in system");
         }
-        // TODO: Поставить в Authentication authenticated = false по истечении access токена
 //        До момента истечения перенаправлять на /profile, /token и /refresh.
-//        Другой вариант: Передавать String email, помеченный аннотацией @AuthenticationPrincipal в контроллере
         final UserDetails user;
         try {
             user = userService.loadUserByUsername(authRequest.getEmail());
         } catch (UsernameNotFoundException e) {
-            throw new AuthException("Пользователь не найден");
+            throw new AuthException("User not found");
         }
 
         if (passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
             final String accessToken = jwtProvider.generateAccessToken(user, authRequest.getRememberMe());
             final String refreshToken = jwtProvider.generateRefreshToken(user, authRequest.getRememberMe());
             refreshStorage.put(user.getUsername(), refreshToken);
-            // TODO: Здесь! Засунуть Authentication в SecurityContext!!!
             return new JwtResponse(accessToken, refreshToken);
         } else {
-            throw new AuthException("Неправильный пароль");
+            throw new AuthException("Wrong password");
         }
     }
 
@@ -62,7 +59,7 @@ public class AuthService {
                 try {
                     user = userService.loadUserByUsername(email);
                 } catch (UsernameNotFoundException e) {
-                    throw new AuthException("Пользователь не найден");
+                    throw new AuthException("User not found");
                 }
                 String accessToken = jwtProvider.generateAccessToken(user, rememberMe);
                 return new JwtResponse(accessToken, null);
@@ -82,7 +79,7 @@ public class AuthService {
                 try {
                     user = userService.loadUserByUsername(email);
                 } catch (UsernameNotFoundException e) {
-                    throw new AuthException("Пользователь не найден");
+                    throw new AuthException("User not found");
                 }
                 String accessToken = jwtProvider.generateAccessToken(user, rememberMe);
                 String newRefreshToken = jwtProvider.generateRefreshToken(user, rememberMe);
@@ -90,7 +87,7 @@ public class AuthService {
                 return new JwtResponse(accessToken, newRefreshToken);
             }
         }
-        throw new AuthException("Невалидный JWT токен");
+        throw new AuthException("Invalid refresh token");
     }
 
     public JwtAuthentication getAuthInfo() {

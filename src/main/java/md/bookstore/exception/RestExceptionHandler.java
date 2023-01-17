@@ -19,12 +19,12 @@ public class RestExceptionHandler {
         if (exception.getPageSize() == null || exception.getPageNumber() == null) {
             LOGGER.warn("Request GET doesn't have page number or page size!");
         } else {
-            LOGGER.warn("Request has illegal arguments: " +
-                    "page number = " + exception.getPageNumber() + " < 0 or " +
-                    "page size = " + exception.getPageSize() + " <= 0.");
+            LOGGER.warn("Incorrect page data: " +
+                    "pg#=" + exception.getPageNumber() + " < 0 or " +
+                    "pgSz=" + exception.getPageSize() + " <= 0.");
         }
 
-        return new ResponseEntity<>("Check your offset and limit!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Check your page number and size!", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UserAlreadyExistAuthenticationException.class)
@@ -52,6 +52,13 @@ public class RestExceptionHandler {
     public ResponseEntity<Object> handleException(IOException exception) {
         LOGGER.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<Object> handleException(AuthException exception) {
+        LOGGER.error(exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+//        Надо найти другой статус
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

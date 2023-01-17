@@ -44,7 +44,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .antMatchers(HttpMethod.POST,"/api/auth/login", "/api/auth/token", "/register", "/sales").permitAll()
+                        .antMatchers(HttpMethod.OPTIONS, "/api/auth/login", "/api/auth/token", "/register", "/sales").permitAll()
+                        .antMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/token", "/register", "/sales").permitAll()
                         .antMatchers(HttpMethod.GET).permitAll()
                         .antMatchers(HttpMethod.GET,"/sales").authenticated()
                         .anyRequest().authenticated()

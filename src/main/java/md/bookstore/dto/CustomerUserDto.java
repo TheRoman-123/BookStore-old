@@ -15,8 +15,16 @@ import java.time.LocalDate;
 public class CustomerUserDto {
     @NotBlank(message = "Please write your name")
     @Size(max = 20, message = "First name can't be longer than 20 symbols")
+    @Pattern(
+            regexp = "^[a-zA-Zа-яА-Я]+$",
+            message = "Name can consist only of latin and cyrillic symbols"
+    )
     private String firstName;
     @Size(max = 20, message = "Last name can't be longer than 20 symbols")
+    @Pattern(
+            regexp = "^[a-zA-Zа-яА-Я]+$",
+            message = "Name can consist only of latin and cyrillic symbols"
+    )
     private String lastName;
     private LocalDate birthDate;
     @Pattern(regexp = "0[67]\\d{7}", message = "Enter valid phone number!")
