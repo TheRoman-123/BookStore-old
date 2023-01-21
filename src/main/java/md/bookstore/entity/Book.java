@@ -1,6 +1,9 @@
 package md.bookstore.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -29,17 +32,17 @@ public class Book {
     @Column(nullable = false)
     private Integer amount;
 
-    @Column
-    private byte[] image;
-
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "books")
-    @ToString.Exclude
-    private Set<LiteraryWork> literaryWorks;
+    @Column(length = 100, unique = true)
+    private String imagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "publisher_id")
     @ToString.Exclude
     private Publisher publisher;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "books")
+    @ToString.Exclude
+    private Set<LiteraryWork> literaryWorks;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "book")
     @ToString.Exclude
