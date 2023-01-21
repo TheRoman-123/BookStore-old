@@ -1,7 +1,7 @@
 package md.bookstore.controller;
 
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import md.bookstore.dto.AuthorDto;
 import md.bookstore.service.AuthorService;
 import org.springframework.http.HttpStatus;
@@ -9,34 +9,32 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("authors")
 public class AuthorController {
-    private AuthorService authorService;
+    private final AuthorService authorService;
 
     @GetMapping
     public ResponseEntity<Object> getAuthorList(
-            @RequestParam(required = false) Integer offset,
-            @RequestParam(required = false) Integer limit
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
+            @RequestParam String sortCriteria,
+            @RequestParam boolean desc
     ) {
-        return (offset == null || limit == null) ?
-                new ResponseEntity<>(authorService.getAll(), HttpStatus.OK) :
-                new ResponseEntity<>(authorService.getAllUntilLimit(offset, limit), HttpStatus.OK);
+        return ResponseEntity.ok(authorService.findAll(pageNumber, pageSize, sortCriteria, desc));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<Object> getAuthorById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(authorService.get(id), HttpStatus.OK);
+        return ResponseEntity.ok(authorService.findAuthorById(id));
     }
 
     @PostMapping
     public ResponseEntity<Object> createAuthor(@RequestBody AuthorDto authorDto) {
-
         return new ResponseEntity<>(
                 authorService.createAuthor(authorDto),
                 HttpStatus.CREATED
         );
-        // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
     }
 
     @PutMapping("/{id}")

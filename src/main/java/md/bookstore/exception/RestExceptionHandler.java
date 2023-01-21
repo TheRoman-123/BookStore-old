@@ -1,25 +1,30 @@
 package md.bookstore.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class RestExceptionHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.class.getName());
 
     @ExceptionHandler(IllegalPageException.class)
     public ResponseEntity<Object> handleException(IllegalPageException exception) {
         if (exception.getPageSize() == null || exception.getPageNumber() == null) {
-            LOGGER.warn("Request GET doesn't have page number or page size!");
+            log.warn("Request GET doesn't have page number or page size!");
         } else {
-            LOGGER.warn("Incorrect page data: " +
+            log.warn("Incorrect page data: " +
                     "pg#=" + exception.getPageNumber() + " < 0 or " +
                     "pgSz=" + exception.getPageSize() + " <= 0.");
         }
@@ -27,50 +32,80 @@ public class RestExceptionHandler {
         return new ResponseEntity<>("Check your page number and size!", HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseBody
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> onConstraintValidationException(
+            ConstraintViolationException ex
+    ) {
+        List<Violation> violations = ex.getConstraintViolations().stream()
+                .map(
+                        violation -> new Violation(
+                                violation.getPropertyPath().toString(),
+                                violation.getMessage()
+                        )
+                )
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(new ValidationErrorResponse(violations), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex
+    ) {
+        log.info("Invalid arguments found : " + ex.getMessage());
+
+        List<Violation> violations = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(new ValidationErrorResponse(violations), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(UserAlreadyExistAuthenticationException.class)
     public ResponseEntity<Object> handleException(UserAlreadyExistAuthenticationException exception) {
         String message = (exception.getMessage() == null) ?
                 "User with such username already exists!" :
                 exception.getMessage();
-        LOGGER.warn(message);
+        log.warn(message);
         return new ResponseEntity<>(message, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleException(EntityNotFoundException exception) {
-        LOGGER.warn(exception.getMessage());
+        log.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(NotEnoughBooksException.class)
     public ResponseEntity<Object> handleException(NotEnoughBooksException exception) {
-        LOGGER.warn(exception.getMessage());
+        log.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(IOException.class)
     public ResponseEntity<Object> handleException(IOException exception) {
-        LOGGER.warn(exception.getMessage());
+        log.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Object> handleException(AuthException exception) {
-        LOGGER.error(exception.getMessage());
+        log.error(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 //        Надо найти другой статус
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Object> handleException(IllegalArgumentException exception) {
-        LOGGER.error(exception.getMessage());
+        log.error(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
 //        Может, потом найдёшь более подходящий статус
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleException(Exception exception) {
-        LOGGER.warn(exception.getMessage());
+        log.warn(exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

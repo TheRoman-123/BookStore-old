@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import md.bookstore.entity.Genre;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
@@ -14,7 +15,8 @@ import javax.validation.constraints.Size;
 @Builder
 public class GenreDto {
     private Long id;
-    @Size(max = 20)
+    @NotBlank(message = "Genre name can't be empty")
+    @Size(max = 50, message = "Genre name must be less than 50 characters")
     private String genreName;
 
     public GenreDto(Genre genre) {

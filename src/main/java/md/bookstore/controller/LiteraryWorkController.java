@@ -15,24 +15,22 @@ public class LiteraryWorkController {
 
     @GetMapping("")
     public ResponseEntity<Object> getLiteraryWorkList(
-            @RequestParam(required = false) Integer offset,
-            @RequestParam(required = false) Integer limit
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
+            @RequestParam String sortCriteria,
+            @RequestParam boolean desc
     ) {
-        return (offset == null || limit == null) ?
-                new ResponseEntity<>(literaryWorkService.getAll(), HttpStatus.OK) :
-                new ResponseEntity<>(literaryWorkService.getAllUntilLimit(offset, limit), HttpStatus.OK);
+        return ResponseEntity.ok(literaryWorkService.findAll(pageNumber, pageSize, sortCriteria, desc));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getLiteraryWorkById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(literaryWorkService.get(id), HttpStatus.OK);
+        return ResponseEntity.ok(literaryWorkService.findLiteraryWorkById(id));
     }
 
     @PostMapping("")
     public ResponseEntity<Object> createLiteraryWork(@RequestBody LiteraryWorkDto literaryWorkDto) {
-        literaryWorkService.createLiteraryWork(literaryWorkDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-        // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
+        return new ResponseEntity<>(literaryWorkService.createLiteraryWork(literaryWorkDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

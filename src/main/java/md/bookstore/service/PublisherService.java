@@ -1,9 +1,9 @@
 package md.bookstore.service;
 
-import lombok.AllArgsConstructor;
-import md.bookstore.repository.PublisherRepository;
+import lombok.RequiredArgsConstructor;
 import md.bookstore.dto.PublisherDto;
 import md.bookstore.entity.Publisher;
+import md.bookstore.repository.PublisherRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
@@ -11,17 +11,18 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class PublisherService {
-    private PublisherRepository publisherRepository;
+    private final CommonService<Publisher> commonService;
+    private final PublisherRepository publisherRepository;
 
-    public List<PublisherDto> getAll(
+    public List<PublisherDto> findAll(
             Integer pageNumber,
             Integer pageSize,
             String sortCriteria,
             boolean desc
     ) {
-        return new CommonService<Publisher>().getAll(
+        return commonService.getAll(
                 pageNumber, pageSize, sortCriteria, desc,
                 publisherRepository,
                 PublisherDto::new
@@ -33,7 +34,7 @@ public class PublisherService {
     }
 
     public Publisher getPublisherById(Long id) {
-        return publisherRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return publisherRepository.getReferenceById(id);
     }
 
     public Long createPublisher(PublisherDto publisherDto) {
@@ -47,7 +48,8 @@ public class PublisherService {
     }
 
     public void updatePublisher(Long id, PublisherDto publisherDto) {
-        Publisher publisher = publisherRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        Publisher publisher = publisherRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
         publisher.setPublisherName(publisherDto.getPublisherName());
         publisherRepository.save(publisher);
     }

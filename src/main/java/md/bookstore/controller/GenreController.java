@@ -1,6 +1,6 @@
 package md.bookstore.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import md.bookstore.dto.GenreDto;
 import md.bookstore.service.GenreService;
 import org.springframework.http.HttpStatus;
@@ -8,32 +8,30 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/genres")
 public class GenreController {
 
-    private GenreService genreService;
+    private final GenreService genreService;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Object> getGenreList(
-            @RequestParam(required = false) Integer offset,
-            @RequestParam(required = false) Integer limit
+            @RequestParam Integer pageNumber,
+            @RequestParam Integer pageSize,
+            @RequestParam String sortCriteria,
+            @RequestParam boolean desc
     ) {
-        return (offset == null || limit == null) ?
-                new ResponseEntity<>(genreService.getAll(), HttpStatus.OK) :
-                new ResponseEntity<>(genreService.getAllUntilLimit(offset, limit), HttpStatus.OK);
+        return ResponseEntity.ok(genreService.findAll(pageNumber, pageSize, sortCriteria, desc));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getGenreById(@PathVariable("id") Long id) {
-        return new ResponseEntity<>(genreService.get(id), HttpStatus.OK);
+        return ResponseEntity.ok(genreService.getGenreById(id));
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<Object> createGenre(@RequestBody GenreDto genreDto) {
-        genreService.createGenre(genreDto);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-        // HttpStatus.NoContent, если в теле ничего не передаём. По идее надо использовать его в моём случае.
+        return new ResponseEntity<>(genreService.createGenre(genreDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")

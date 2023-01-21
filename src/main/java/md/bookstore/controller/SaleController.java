@@ -1,6 +1,6 @@
 package md.bookstore.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import md.bookstore.dto.CartToSaveDto;
 import md.bookstore.service.SaleService;
 import org.springframework.http.HttpStatus;
@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/sales")
 public class SaleController {
-    private SaleService saleService;
+    private final SaleService saleService;
 
-//    @PreAuthorize("permitAll()")
     @PostMapping
     public ResponseEntity<Object> createSale (
             @RequestParam(value = "customerName", required = false) String firstName,

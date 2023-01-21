@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class ValidationErrorResponse {
+public final class ValidationErrorResponse {
     private final List<Violation> violations;
 }

@@ -1,53 +1,48 @@
 package md.bookstore.service;
 
 import lombok.AllArgsConstructor;
-import md.bookstore.repository.LiteraryWorkRepository;
 import md.bookstore.dto.LiteraryWorkDto;
 import md.bookstore.entity.LiteraryWork;
-import md.bookstore.exception.IllegalPageException;
+import md.bookstore.repository.LiteraryWorkRepository;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class LiteraryWorkService {
+    private CommonService<LiteraryWork> commonService;
     private LiteraryWorkRepository literaryWorkRepository;
 
-    // Later implement Pageable!
-    public List<LiteraryWorkDto> getAllUntilLimit(Integer offset, Integer limit) {
-        if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-            throw new IllegalPageException(offset, limit);
-        }
-        return literaryWorkRepository.findLiteraryWorkEntityWithOffsetAndLimit(offset, limit)
-                .parallelStream()
-                .map(LiteraryWorkDto::new)
-                .collect(Collectors.toList());
+    public List<LiteraryWorkDto> findAll(Integer pageNumber, Integer pageSize, String sortCriteria, boolean desc) {
+        return commonService.getAll(
+                pageNumber, pageSize, sortCriteria, desc,
+                literaryWorkRepository,
+                LiteraryWorkDto::new
+        );
     }
 
-    public List<LiteraryWorkDto> getAll() {
-        return literaryWorkRepository.findAll()
-                .parallelStream()
-                .map(LiteraryWorkDto::new)
-                .collect(Collectors.toList());
+    public LiteraryWorkDto findLiteraryWorkById(Long id) {
+        return new LiteraryWorkDto(literaryWorkRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new));
     }
 
-    public LiteraryWorkDto get(Long id) {
-        return new LiteraryWorkDto(literaryWorkRepository.findById(id).orElseThrow());
-    }
-
-    public void createLiteraryWork(LiteraryWorkDto literaryWorkDto) {
-        if (literaryWorkDto == null) {
-            throw new NullPointerException("LiteraryWork is null. LiteraryWork not created.");
+    public Long createLiteraryWork(@Valid LiteraryWorkDto literaryWorkDto) {
+        if (literaryWorkRepository.existsByTitle(literaryWorkDto.getTitle())) {
+            throw new EntityExistsException("Literary work with title" + literaryWorkDto.getTitle() + " already exists");
         }
         LiteraryWork literaryWork = new LiteraryWork();
         literaryWork.setTitle(literaryWorkDto.getTitle());
         literaryWorkRepository.save(literaryWork);
+
+        return literaryWork.getId();
     }
 
     public void updateLiteraryWork(Long id, LiteraryWorkDto literaryWorkDto) {
-        LiteraryWork literaryWork = literaryWorkRepository.getReferenceById(id);
+        LiteraryWork literaryWork = literaryWorkRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         literaryWork.setTitle(literaryWorkDto.getTitle());
         literaryWorkRepository.save(literaryWork);
     }

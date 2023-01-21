@@ -1,51 +1,49 @@
 package md.bookstore.service;
 
-import lombok.AllArgsConstructor;
-import md.bookstore.repository.GenreRepository;
+import lombok.RequiredArgsConstructor;
 import md.bookstore.dto.GenreDto;
 import md.bookstore.entity.Genre;
-import md.bookstore.exception.IllegalPageException;
+import md.bookstore.repository.GenreRepository;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class GenreService {
-    private GenreRepository genreRepository;
+    private final CommonService<Genre> commonService;
+    private final GenreRepository genreRepository;
 
-    public List<GenreDto> getAllUntilLimit(Integer offset, Integer limit) {
-        if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-            throw new IllegalPageException(offset, limit);
-        }
-        return genreRepository.findGenreEntityWithOffsetAndLimit(offset, limit)
-                .parallelStream()
-                .map(GenreDto::new)
-                .collect(Collectors.toList());
+    public List<GenreDto> findAll(Integer pageNumber, Integer pageSize, String sortCriteria, boolean desc) {
+        return commonService.getAll(
+                pageNumber, pageSize, sortCriteria, desc,
+                genreRepository,
+                GenreDto::new
+        );
     }
 
-    public List<GenreDto> getAll() {
-        return genreRepository.findAll()
-                .parallelStream()
-                .map(GenreDto::new)
-                .collect(Collectors.toList());
+    public GenreDto getGenreById(Long id) {
+        return new GenreDto(genreRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public GenreDto get(Long id) {
-        return new GenreDto(genreRepository.findById(id).orElseThrow());
-    }
-
-    public void createGenre(GenreDto genreDto) {
-        if (genreDto == null) {
-            throw new NullPointerException("Genre is null. Genre not created.");
+    public Long createGenre(@Valid GenreDto genreDto) {
+        if (genreRepository.existsByGenreNameIgnoreCase(genreDto.getGenreName())) {
+            throw new EntityExistsException("Genre with provided name already exists");
         }
         Genre genre = new Genre();
         genre.setGenreName(genreDto.getGenreName());
         genreRepository.save(genre);
+
+        return genre.getId();
     }
 
     public void updateGenre(Long id, GenreDto genreDto) {
+        if (genreRepository.existsByGenreNameIgnoreCase(genreDto.getGenreName())) {
+            throw new EntityExistsException("Genre with provided name already exists");
+        }
         Genre genre = genreRepository.getReferenceById(id);
         genre.setGenreName(genreDto.getGenreName());
         genreRepository.save(genre);

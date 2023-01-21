@@ -1,65 +1,55 @@
 package md.bookstore.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import md.bookstore.dto.AuthorDto;
-import md.bookstore.repository.AuthorRepository;
 import md.bookstore.entity.Author;
-import md.bookstore.exception.IllegalPageException;
+import md.bookstore.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthorService {
-
+    private final CommonService<Author> commonService;
     private final AuthorRepository authorRepository;
 
-    // Later implement Pageable!
-    public List<AuthorDto> getAllUntilLimit(Integer offset, Integer limit) {
-        if (offset == null || limit == null || limit <= 0 || offset <= 0) {
-            throw new IllegalPageException(offset, limit);
-        }
-        return authorRepository.findAuthorEntityWithOffsetAndLimit(offset, limit)
-                .parallelStream()
-                .map(AuthorDto::new)
-                .collect(Collectors.toList());
+    public List<AuthorDto> findAll(Integer pageNumber, Integer pageSize, String sortCriteria, boolean desc) {
+        return commonService.getAll(
+                pageNumber, pageSize, sortCriteria, desc,
+                authorRepository,
+                AuthorDto::new
+        );
     }
 
-    public List<AuthorDto> getAll() {
-        /*
-        List<Author> authorList = authorRepository.findAll();
-        List<AuthorDto> authorDtoList = new ArrayList<>();
-        for (Author author : authorList) {
-            authorDtoList.add(new AuthorDto(author));
-        }
-        return authorDtoList;
-        */
-
-        return authorRepository.findAll()
-                .parallelStream()
-                .map(AuthorDto::new)
-                .collect(Collectors.toList());
+    public AuthorDto findAuthorById(Long id) {
+        return new AuthorDto(authorRepository.findById(id).orElseThrow(EntityNotFoundException::new));
     }
 
-    public AuthorDto get(Long id) {
-        return new AuthorDto(authorRepository.findById(id).orElseThrow());
-    }
-
-    public Long createAuthor(AuthorDto authorDto) {
-        if (authorDto == null) {
-            throw new NullPointerException("Author.ts is null. Author.ts not created.");
+    public Long createAuthor(@Valid AuthorDto authorDto) {
+        if (authorRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(
+                authorDto.getFirstName(), authorDto.getLastName()
+        )) {
+            throw new EntityExistsException("Author with provided info already exists");
         }
         Author author = new Author();
         author.setFirstName(authorDto.getFirstName());
         author.setLastName(authorDto.getLastName());
         authorRepository.save(author);
+
         return author.getId();
     }
 
     public void updateAuthor(Long id, AuthorDto authorDto) {
-        Author author = authorRepository.getReferenceById(id);
+        if (authorRepository.existsByFirstNameIgnoreCaseAndLastNameIgnoreCase(
+                authorDto.getFirstName(), authorDto.getLastName()
+        )) {
+            throw new EntityExistsException("Author with provided info already exists");
+        }
+        Author author = authorRepository.getReferenceById(id); // Надо попробовать
         author.setFirstName(authorDto.getFirstName());
         author.setLastName(authorDto.getLastName());
         authorRepository.save(author);

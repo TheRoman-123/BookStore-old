@@ -1,10 +1,11 @@
 package md.bookstore.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,14 +14,12 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
 public class LiteraryWork {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "literature_id", nullable = false)
     private Long id;
 
-    @Size(max = 40)
     @Column(length = 40, nullable = false)
     private String title;
 

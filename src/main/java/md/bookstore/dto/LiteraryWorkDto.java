@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import md.bookstore.entity.LiteraryWork;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 /**
@@ -17,7 +18,9 @@ import javax.validation.constraints.Size;
 @Builder
 public class LiteraryWorkDto {
     private Long id;
-    @Size(max = 40)
+
+    @NotBlank(message = "Title can't be empty")
+    @Size(min = 1, max = 40, message = "Title must be <= 40 characters")
     private String title;
 
     public LiteraryWorkDto(LiteraryWork literaryWork) {

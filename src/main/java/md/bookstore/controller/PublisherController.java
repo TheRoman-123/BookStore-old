@@ -23,7 +23,7 @@ public class PublisherController {
             @RequestParam String sortCriteria,
             @RequestParam boolean desc
     ) {
-        return ResponseEntity.ok(publisherService.getAll(pageNumber, pageSize, sortCriteria, desc));
+        return ResponseEntity.ok(publisherService.findAll(pageNumber, pageSize, sortCriteria, desc));
     }
 
     @GetMapping("/{id}")

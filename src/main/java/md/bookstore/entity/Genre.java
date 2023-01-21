@@ -1,10 +1,12 @@
 package md.bookstore.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,7 +21,6 @@ public class Genre {
     @Column(name = "genre_id", nullable = false)
     private Long id;
 
-    @Size(max = 50)
     @Column(name = "genre_name", length = 50, unique = true, nullable = false)
     private String genreName;
 
