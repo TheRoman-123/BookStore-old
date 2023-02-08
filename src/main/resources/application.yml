@@ -58,16 +58,16 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://localhost:5432/rest_application
-    username: root
-    password: 123
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     generate-ddl: false
     hibernate:
       ddl-auto: none
   flyway:
-    enabled: true
-name: ${name:production}
+    enabled: ${FLYWAY_ENABLED}
+name: ${container_name:production}
 environment: production
 servers:
   - rest.app.com
