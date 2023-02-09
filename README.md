@@ -26,9 +26,10 @@ Run this project:
 $ ./mvnw spring-boot:run
 ```
 
-## Run in container!
+## Run in container
 If Docker is installed on your computer open Book Store directory and run with:
 ```
+$ ./mvnw clean package
 $ docker-compose up
 ```
 
