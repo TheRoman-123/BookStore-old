@@ -11,6 +11,9 @@ import md.bookstore.repository.BookRepository;
 import md.bookstore.repository.LiteraryWorkRepository;
 import md.bookstore.repository.PublisherRepository;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +21,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -81,15 +85,22 @@ public class BookService {
         return book.getId();
     }
 
-    public byte[] getBookImageById(Long id) throws IOException {
+    public ResponseEntity<byte[]> getBookImageById(Long id) throws IOException {
         Book book = bookRepository.findById(id).orElseThrow(EntityNotFoundException::new);
         if (book.getImagePath() == null) {
             throw new EmptyFieldException("book", "imagePath");
         }
-        Path path = Path.of(book.getImagePath());
+        String bookImageString = book.getImagePath();
+        String mediaType = URLConnection.guessContentTypeFromName(bookImageString);
+        Path path = Path.of("src/main/resources/static/images/" + bookImageString);
+
+        final HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.add("Content-Type", mediaType);
+        responseHeaders.add("Content-Length", String.valueOf(Files.size(path)));
+
         if (!Files.exists(path)) {
             throw new FileNotFoundException("Image doesn't exist or is unreachable");
         }
-        return Files.readAllBytes(path);
+        return new ResponseEntity<>(Files.readAllBytes(path), responseHeaders, HttpStatus.OK);
     }
 }

@@ -6,13 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-public final class CommonService<T> {
+public class CommonService<T> {
+    @Transactional
     public <R> List<R> getAll(
             Integer pageNumber,
             Integer pageSize,

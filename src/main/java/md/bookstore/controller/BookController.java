@@ -35,14 +35,10 @@ public class BookController {
         return ResponseEntity.ok(bookService.findAll(pageNumber, pageSize, sortCriteria, desc));
     }
 
-    @GetMapping(value = "/image/{id}", produces = {
-            MediaType.IMAGE_PNG_VALUE,
-            MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_GIF_VALUE
-    })
+    @GetMapping("/image/{id}")
     public ResponseEntity<byte[]> getImage(@PathVariable("id") Long id)
             throws IOException {
-        return ResponseEntity.ok(bookService.getBookImageById(id));
+        return bookService.getBookImageById(id);
     }
 
     @PreAuthorize("hasAnyAuthority('CONTENT_MANAGER', 'ADMIN')")
